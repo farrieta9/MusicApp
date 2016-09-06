@@ -17,6 +17,7 @@ class FeedController: UICollectionViewController {
 		navigationItem.title = "Feed"
 		collectionView?.backgroundColor = UIColor.whiteColor()
 		collectionView?.registerClass(FeedCell.self, forCellWithReuseIdentifier: cellId)
+        collectionView?.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 150, right: 0)
 	}
 	
 	override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
