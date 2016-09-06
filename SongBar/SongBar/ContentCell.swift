@@ -18,7 +18,7 @@ class ContentCell: UITableViewCell {
 		
 		detailTextLabel?.frame = CGRectMake(thumbnailImageView.frame.width + 16, detailTextLabel!.frame.origin.y, detailTextLabel!.frame.width, detailTextLabel!.frame.height)
 	}
-//
+
 	let thumbnailImageView: UIImageView = {
 		let imageView = UIImageView()
 		imageView.image = UIImage(named: "default_profile.png")

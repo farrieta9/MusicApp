@@ -11,6 +11,7 @@ import UIKit
 class SearchController: UIViewController {
 	
 	private let cellId = "cellId"
+    var searchBar: UISearchBar!
 	
 	let searchView: SearchView = {
 		let sv = SearchView()
@@ -23,6 +24,7 @@ class SearchController: UIViewController {
 		super.viewDidLoad()
 		
 		setUpSearchView()
+        createSearchBarInNavigationBar()
 	}
 	
 	func setUpSearchView() {
@@ -36,8 +38,18 @@ class SearchController: UIViewController {
 		
 		searchView.tableView.dataSource = self
 		searchView.tableView.delegate = self
-		
 	}
+    
+    func createSearchBarInNavigationBar() {
+        searchBar = UISearchBar()
+        searchBar.showsCancelButton = false
+        searchBar.placeholder = "Search for music here"
+        searchBar.delegate = self
+        searchBar.autocorrectionType = .No
+        searchBar.autocapitalizationType = .None
+        searchBar.returnKeyType = .Done
+        self.navigationItem.titleView = searchBar
+    }
 }
 
 extension SearchController: UITableViewDataSource {
@@ -62,4 +74,31 @@ extension SearchController: UITableViewDelegate {
 	func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
 		return 72
 	}
+}
+
+extension SearchController: UISearchBarDelegate {
+    
+//    func searchBar(searchBar: UISearchBar, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
+//        indicator.startAnimating()
+//        indicator.backgroundColor = UIColor.whiteColor()
+//        timer?.invalidate()
+//        timer = NSTimer.scheduledTimerWithTimeInterval(0.75, target: self, selector: #selector(self.searchBarTextDidPause(_:)), userInfo: searchBar.text, repeats: false)
+//        
+//        return true
+//    }
+    
+    func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
+        searchBar.showsCancelButton = true
+    }
+    
+    func searchBarCancelButtonClicked(searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
+        searchBar.showsCancelButton = false
+        searchBar.text = ""
+    }
+    
+    func searchBarSearchButtonClicked(searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
+        searchBar.showsCancelButton = true
+    }
 }

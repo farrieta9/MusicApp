@@ -13,10 +13,51 @@ class AppTabBarController: UITabBarController {
 	let playerView: UIView = {
 		let view = UIView()
 		view.backgroundColor = UIColor.blueColor()
+        view.backgroundColor = UIColor.rgb(225, green: 225, blue: 225)
 		view.translatesAutoresizingMaskIntoConstraints = false
 		view.hidden = false
 		return view
 	}()
+    
+    let playPauseButton: UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        let image = UIImage(named: "pause")
+        button.setImage(image, forState: .Normal)
+        return button
+    }()
+    
+    let stopButton: UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        let image = UIImage(named: "delete")
+        button.setImage(image, forState: .Normal)
+        return button
+    }()
+    
+    let titleLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "Some track name"
+        label.font = UIFont.systemFontOfSize(12)
+        return label
+    }()
+    
+    let detailLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "Artist name"
+        label.font = UIFont.systemFontOfSize(12)
+        return label
+    }()
+    
+    let spotifyLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "Powered by Spotify"
+        label.font = UIFont.systemFontOfSize(12)
+        return label
+    }()
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -40,6 +81,11 @@ class AppTabBarController: UITabBarController {
 		
 		
 		view.addSubview(playerView)
+        playerView.addSubview(playPauseButton)
+        playerView.addSubview(stopButton)
+        playerView.addSubview(titleLabel)
+        playerView.addSubview(detailLabel)
+        playerView.addSubview(spotifyLabel)
 		setUpContraints()
 	}
 	
@@ -49,6 +95,35 @@ class AppTabBarController: UITabBarController {
 		playerView.centerYAnchor.constraintEqualToAnchor(view.bottomAnchor, constant: -70).active = true
 		playerView.widthAnchor.constraintEqualToAnchor(view.widthAnchor).active = true
 		playerView.heightAnchor.constraintEqualToConstant(50).active = true
+        
+        playPauseButton.centerYAnchor.constraintEqualToAnchor(playerView.centerYAnchor).active = true
+        playPauseButton.leftAnchor.constraintEqualToAnchor(playerView.leftAnchor, constant: 8).active = true
+        
+        stopButton.centerYAnchor.constraintEqualToAnchor(playerView.centerYAnchor).active = true
+        stopButton.rightAnchor.constraintEqualToAnchor(playerView.rightAnchor, constant: -8).active = true
+        
+        titleLabel.leftAnchor.constraintEqualToAnchor(playPauseButton.rightAnchor, constant: 8).active = true
+        titleLabel.centerYAnchor.constraintEqualToAnchor(playPauseButton.topAnchor, constant: 2).active = true
+        
+        detailLabel.leftAnchor.constraintEqualToAnchor(playPauseButton.rightAnchor, constant: 8).active = true
+        detailLabel.topAnchor.constraintEqualToAnchor(titleLabel.bottomAnchor, constant: 4).active = true
+        
+        spotifyLabel.centerXAnchor.constraintEqualToAnchor(playerView.centerXAnchor).active = true
+        spotifyLabel.bottomAnchor.constraintEqualToAnchor(playerView.bottomAnchor, constant: -4).active = true
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

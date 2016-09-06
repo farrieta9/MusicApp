@@ -19,10 +19,12 @@ class SearchView: UIView {
 	let segmentControl: UISegmentedControl = {
 		let seg = UISegmentedControl()
 		seg.translatesAutoresizingMaskIntoConstraints = false
-		seg.insertSegmentWithTitle("One", atIndex: 0, animated: true)
-		seg.insertSegmentWithTitle("Two", atIndex: 1, animated: true)
+		seg.insertSegmentWithTitle("Music", atIndex: 0, animated: true)
+		seg.insertSegmentWithTitle("People", atIndex: 1, animated: true)
 		return seg
 	}()
+    
+    
 	
 	override init(frame: CGRect) {
 		super.init(frame: frame)
