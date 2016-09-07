@@ -11,7 +11,7 @@ import UIKit
 class SearchController: UIViewController {
 	
 	private let cellId = "cellId"
-    var searchBar: UISearchBar!
+    
 	
 	let searchView: SearchView = {
 		let sv = SearchView()
@@ -24,11 +24,15 @@ class SearchController: UIViewController {
 		super.viewDidLoad()
 		
 		setUpSearchView()
-        createSearchBarInNavigationBar()
+//        createSearchBarInNavigationBar()
 	}
 	
 	func setUpSearchView() {
 		view.addSubview(searchView)
+        navigationItem.titleView = searchBar
+        
+        searchBar.delegate = self
+        
 		searchView.centerXAnchor.constraintEqualToAnchor(view.centerXAnchor).active = true
 		searchView.centerYAnchor.constraintEqualToAnchor(view.centerYAnchor).active = true
 		searchView.widthAnchor.constraintEqualToAnchor(view.widthAnchor).active = true
@@ -39,17 +43,28 @@ class SearchController: UIViewController {
 		searchView.tableView.dataSource = self
 		searchView.tableView.delegate = self
 	}
-    
-    func createSearchBarInNavigationBar() {
-        searchBar = UISearchBar()
-        searchBar.showsCancelButton = false
-        searchBar.placeholder = "Search for music here"
-        searchBar.delegate = self
-        searchBar.autocorrectionType = .No
-        searchBar.autocapitalizationType = .None
-        searchBar.returnKeyType = .Done
-        self.navigationItem.titleView = searchBar
-    }
+//    
+//    var searchBar: UISearchBar!
+//    
+//    func createSearchBarInNavigationBar() {
+//        searchBar = UISearchBar()
+//        searchBar.showsCancelButton = false
+//        searchBar.placeholder = "Search for music here"
+//        searchBar.delegate = self
+//        searchBar.autocorrectionType = .No
+//        searchBar.autocapitalizationType = .None
+//        searchBar.returnKeyType = .Done
+//        self.navigationItem.titleView = searchBar
+//    }
+    let searchBar: UISearchBar = {
+        let bar = UISearchBar()
+        bar.showsCancelButton = false
+        bar.placeholder = "Search here..."
+        bar.autocorrectionType = .No
+        bar.autocapitalizationType = .None
+        bar.returnKeyType = .Done
+        return bar
+    }()
 }
 
 extension SearchController: UITableViewDataSource {
@@ -76,29 +91,38 @@ extension SearchController: UITableViewDelegate {
 	}
 }
 
-extension SearchController: UISearchBarDelegate {
-    
-//    func searchBar(searchBar: UISearchBar, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
-//        indicator.startAnimating()
-//        indicator.backgroundColor = UIColor.whiteColor()
-//        timer?.invalidate()
-//        timer = NSTimer.scheduledTimerWithTimeInterval(0.75, target: self, selector: #selector(self.searchBarTextDidPause(_:)), userInfo: searchBar.text, repeats: false)
-//        
-//        return true
+//extension SearchController: UISearchBarDelegate {
+//    
+//
+//    func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
+//        searchBar.showsCancelButton = true
 //    }
-    
-    func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
+//    
+//    func searchBarCancelButtonClicked(searchBar: UISearchBar) {
+//        searchBar.resignFirstResponder()
+//        searchBar.showsCancelButton = false
+//        searchBar.text = ""
+//    }
+//    
+//    func searchBarSearchButtonClicked(searchBar: UISearchBar) {
+//        searchBar.resignFirstResponder()
+//        searchBar.showsCancelButton = true
+//    }
+//}
+
+extension SearchController: UISearchBarDelegate {
+    func searchBarShouldBeginEditing(searchBar: UISearchBar) -> Bool {
         searchBar.showsCancelButton = true
+        return true
     }
     
     func searchBarCancelButtonClicked(searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
         searchBar.showsCancelButton = false
-        searchBar.text = ""
     }
     
     func searchBarSearchButtonClicked(searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
-        searchBar.showsCancelButton = true
+        searchBar.showsCancelButton = false
     }
 }

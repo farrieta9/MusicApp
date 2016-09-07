@@ -42,6 +42,8 @@ class FeedCell: UICollectionViewCell {
 		let imageView = UIImageView()
 		imageView.translatesAutoresizingMaskIntoConstraints = false
 		imageView.contentMode = UIViewContentMode.ScaleAspectFit
+        imageView.layer.cornerRadius = 22
+        imageView.layer.masksToBounds = true
 		return imageView
 	}()
 	
@@ -55,7 +57,6 @@ class FeedCell: UICollectionViewCell {
 	let descriptionView: UIView = {
 		let view = UIView()
 		view.translatesAutoresizingMaskIntoConstraints = false
-//		view.backgroundColor = UIColor.blueColor()
 		return view
 	}()
 	
@@ -70,6 +71,7 @@ class FeedCell: UICollectionViewCell {
 		let label = UILabel()
 		label.text = "A really nice comment"
 		label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.systemFontOfSize(14)
 		return label
 	}()
 	
@@ -119,8 +121,8 @@ class FeedCell: UICollectionViewCell {
 		
 		userImageView.leftAnchor.constraintEqualToAnchor(descriptionView.leftAnchor, constant: 8).active = true
 		userImageView.centerYAnchor.constraintEqualToAnchor(descriptionView.centerYAnchor).active = true
-		userImageView.heightAnchor.constraintEqualToConstant(48).active = true
-		userImageView.widthAnchor.constraintEqualToConstant(48).active = true
+		userImageView.heightAnchor.constraintEqualToConstant(44).active = true
+		userImageView.widthAnchor.constraintEqualToConstant(44).active = true
 		
 		usernameLabel.topAnchor.constraintEqualToAnchor(userImageView.topAnchor, constant: 0).active = true
 		usernameLabel.leftAnchor.constraintEqualToAnchor(userImageView.rightAnchor, constant: 8).active = true
