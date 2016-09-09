@@ -26,6 +26,9 @@
 		8C89A3EF1D823F0100BA827E /* RegisterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C89A3EE1D823F0100BA827E /* RegisterView.swift */; };
 		8C89A3F11D823F0A00BA827E /* RegisterController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C89A3F01D823F0A00BA827E /* RegisterController.swift */; };
 		8C89A3F41D8241D800BA827E /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C89A3F31D8241D800BA827E /* User.swift */; };
+		8C9E0A7D1D837A610067D862 /* SettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C9E0A7C1D837A610067D862 /* SettingsController.swift */; };
+		8C9E0A7F1D837AEE0067D862 /* SettingsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C9E0A7E1D837AEE0067D862 /* SettingsCell.swift */; };
+		8C9E0A811D837BEE0067D862 /* Setting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C9E0A801D837BEE0067D862 /* Setting.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -51,6 +54,9 @@
 		8C89A3EE1D823F0100BA827E /* RegisterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegisterView.swift; sourceTree = "<group>"; };
 		8C89A3F01D823F0A00BA827E /* RegisterController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegisterController.swift; sourceTree = "<group>"; };
 		8C89A3F31D8241D800BA827E /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		8C9E0A7C1D837A610067D862 /* SettingsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsController.swift; sourceTree = "<group>"; };
+		8C9E0A7E1D837AEE0067D862 /* SettingsCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsCell.swift; sourceTree = "<group>"; };
+		8C9E0A801D837BEE0067D862 /* Setting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Setting.swift; sourceTree = "<group>"; };
 		9AEB8E3EA73BE7A07A232218 /* Pods_SongBar.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SongBar.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -126,6 +132,7 @@
 				8C28B1BC1D7E8BA100661FE4 /* UserController.swift */,
 				8C89A3EC1D823DF700BA827E /* LoginController.swift */,
 				8C89A3F01D823F0A00BA827E /* RegisterController.swift */,
+				8C9E0A7C1D837A610067D862 /* SettingsController.swift */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -139,6 +146,7 @@
 				8C89A3E61D8232EE00BA827E /* UserCell.swift */,
 				8C89A3EA1D823DD500BA827E /* LoginView.swift */,
 				8C89A3EE1D823F0100BA827E /* RegisterView.swift */,
+				8C9E0A7E1D837AEE0067D862 /* SettingsCell.swift */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -155,6 +163,7 @@
 			isa = PBXGroup;
 			children = (
 				8C89A3F31D8241D800BA827E /* User.swift */,
+				8C9E0A801D837BEE0067D862 /* Setting.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -285,11 +294,14 @@
 				8C4FFAB01D7E53BF00477B36 /* FeedController.swift in Sources */,
 				8C89A3ED1D823DF700BA827E /* LoginController.swift in Sources */,
 				8C89A3EF1D823F0100BA827E /* RegisterView.swift in Sources */,
+				8C9E0A7F1D837AEE0067D862 /* SettingsCell.swift in Sources */,
 				8C28B1B91D7E8B2A00661FE4 /* SearchController.swift in Sources */,
 				8C402E681D7E360600314A87 /* AppDelegate.swift in Sources */,
 				8C28B1C11D7E91B200661FE4 /* ContentCell.swift in Sources */,
 				8C28B1BB1D7E8B8D00661FE4 /* AppTabBarController.swift in Sources */,
+				8C9E0A811D837BEE0067D862 /* Setting.swift in Sources */,
 				8C28B1BF1D7E8DAE00661FE4 /* SearchView.swift in Sources */,
+				8C9E0A7D1D837A610067D862 /* SettingsController.swift in Sources */,
 				8C89A3F41D8241D800BA827E /* User.swift in Sources */,
 				8C28B1BD1D7E8BA100661FE4 /* UserController.swift in Sources */,
 				8C4FFAB41D7E573900477B36 /* FeedCell.swift in Sources */,

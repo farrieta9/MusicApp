@@ -11,6 +11,16 @@ import Firebase
 
 class UserController: UITableViewController {
     
+    lazy var settingsLauncher: SettingsController = {
+        let launcher = SettingsController()
+        launcher.userController = self
+        return launcher
+    }()
+    
+    var timer: NSTimer? = nil
+    var followingData = [User]()
+    var fansData = [User]()
+    
     enum ContentOptions {
         case Posts, Fans, Following
     }
@@ -31,6 +41,9 @@ class UserController: UITableViewController {
             if let imageUrl = user.imageUrl {
                 headerView.pictureView.loadImageUsingURLString(imageUrl)
             }
+            
+            observeFollowing()
+            observeFans()
         }
     }
 
@@ -48,6 +61,8 @@ class UserController: UITableViewController {
         
         headerView.segmentControl.addTarget(self, action: #selector(self.handleSegmentControl), forControlEvents: .ValueChanged)
         headerView.followButton.addTarget(self, action: #selector(self.handleFollowButton), forControlEvents: .TouchUpInside)
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "more"), style: .Plain, target: self, action: #selector(handleSettings))
+
 	}
 
     
@@ -78,7 +93,7 @@ class UserController: UITableViewController {
                 self.headerView.followButton.backgroundColor = UIColor.rgb(13, green: 159, blue: 224)
             }
             
-        }, withCancelBlock: nil)        
+        }, withCancelBlock: nil)
     }
     
     private func followUser(user: User) {
@@ -118,9 +133,7 @@ class UserController: UITableViewController {
             break
         }
         
-        dispatch_async(dispatch_get_main_queue()) { 
-            self.tableView.reloadData()
-        }
+        attemptReloadTable()
     }
     
     private func observeSignedInUser() {
@@ -146,14 +159,94 @@ class UserController: UITableViewController {
             
             self.user = user
             
-            
         }, withCancelBlock: nil)
+    }
+    
+    func observeFollowing() {
+        
+        guard let uid = user?.uid else {
+            return
+        }
+        
+        FIRDatabase.database().reference().child("users-following").child(uid).observeEventType(.ChildAdded, withBlock: { (snapshot) in
+            
+            FIRDatabase.database().reference().child("users").child(snapshot.key).observeSingleEventOfType(.Value, withBlock: { (snapshot) in
+                
+                guard let result = snapshot.value as? [String: AnyObject] else {
+                    return
+                }
+                
+                let user = User()
+                user.uid = snapshot.key
+                user.setValuesForKeysWithDictionary(result)
+                
+                if let imageUrl = result["imageUrl"] as? String {
+                    user.imageUrl = imageUrl
+                }
+                
+                self.followingData.append(user)
+                self.attemptReloadTable()
+                
+                
+            }, withCancelBlock: nil)
+        }, withCancelBlock: nil)
+    }
+    
+    func observeFans() {
+        guard let uid = user?.uid else {
+            return
+        }
+        
+        
+        FIRDatabase.database().reference().child("users-fans").child(uid).observeEventType(.ChildAdded, withBlock: { (snapshot) in
+            
+            FIRDatabase.database().reference().child("users").child(snapshot.key).observeSingleEventOfType(.Value, withBlock: { (snapshot) in
+                
+                guard let result = snapshot.value as? [String: AnyObject] else {
+                    return
+                }
+                
+                let user = User()
+                user.uid = snapshot.key
+                user.setValuesForKeysWithDictionary(result)
+                
+                if let imageUrl = result["imageUrl"] as? String {
+                    user.imageUrl = imageUrl
+                }
+                
+                self.fansData.append(user)
+                self.attemptReloadTable()
+                
+                }, withCancelBlock: nil)
+            }, withCancelBlock: nil)
+    }
+    
+    private func attemptReloadTable() {
+        self.timer?.invalidate()
+        self.timer = NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: #selector(self.handleReloadTable), userInfo: nil, repeats: false)
+    }
+    
+    func handleReloadTable() {
+        dispatch_async(dispatch_get_main_queue()) {
+            self.tableView.reloadData()
+        }
+    }
+    
+    func handleSettings() {
+        settingsLauncher.showSettings()
     }
 }
 
 extension UserController {
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 9
+        switch contentOption {
+        case .Fans:
+            return fansData.count
+        case .Following:
+            return followingData.count
+        default:
+            return 9
+        }
     }
     
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -162,8 +255,17 @@ extension UserController {
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier(cellId, forIndexPath: indexPath) as! ContentCell
-
-        cell.textLabel?.text = "some username"
+        
+        switch contentOption {
+        case .Fans:
+            cell.user = fansData[indexPath.row]
+        case .Following:
+            cell.user = followingData[indexPath.row]
+        default:
+            cell.textLabel?.text = "some username"
+            cell.detailTextLabel?.text = "some detail about the cosmos"
+        }
+        
         return cell
     }
     override func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
