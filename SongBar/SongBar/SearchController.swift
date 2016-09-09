@@ -146,6 +146,7 @@ class SearchController: UIViewController {
     func showUserControllerForUser(user: User) {
         let userController = UserController()
         userController.user = user
+        userController.checkIfFollowing()
         navigationController?.pushViewController(userController, animated: true)
     }
     

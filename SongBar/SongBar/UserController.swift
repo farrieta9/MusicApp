@@ -49,9 +49,61 @@ class UserController: UITableViewController {
         headerView.segmentControl.addTarget(self, action: #selector(self.handleSegmentControl), forControlEvents: .ValueChanged)
         headerView.followButton.addTarget(self, action: #selector(self.handleFollowButton), forControlEvents: .TouchUpInside)
 	}
+
     
     func handleFollowButton() {
-        print(123)
+        guard let user = user else {
+            return
+        }
+        
+        if headerView.followButton.titleLabel?.text == "+ Follow" {
+            followUser(user)
+        } else {
+            unFollowUser(user)
+        }
+    }
+    
+    func checkIfFollowing() {
+        guard let uid = user?.uid, signedInUserUid = FIRAuth.auth()?.currentUser?.uid else {
+            return
+        }
+
+        FIRDatabase.database().reference().child("users-following").child(signedInUserUid).child(uid).observeSingleEventOfType(.Value, withBlock: { (snapshot) in
+            
+            if snapshot.value is NSNull {
+                self.headerView.followButton.setTitle("+ Follow", forState: .Normal)
+                self.headerView.followButton.backgroundColor = UIColor.clearColor()
+            } else {
+                self.headerView.followButton.setTitle("Following", forState: .Normal)
+                self.headerView.followButton.backgroundColor = UIColor.rgb(13, green: 159, blue: 224)
+            }
+            
+        }, withCancelBlock: nil)        
+    }
+    
+    private func followUser(user: User) {
+        
+        guard let uid = user.uid, signedInUserUid = FIRAuth.auth()?.currentUser?.uid else {
+            return
+        }
+        
+        FIRDatabase.database().reference().child("users-following").child(signedInUserUid).updateChildValues([uid: 1])
+        FIRDatabase.database().reference().child("users-fans").child(uid).updateChildValues([signedInUserUid: 1])
+        
+        headerView.followButton.setTitle("Following", forState: .Normal)
+        headerView.followButton.backgroundColor = UIColor.rgb(13, green: 159, blue: 224)
+    }
+    
+    func unFollowUser(user: User) {
+        guard let uid = FIRAuth.auth()?.currentUser?.uid else {
+            return
+        }
+        
+        FIRDatabase.database().reference().child("users-following").child(uid).child(user.uid!).removeValue()
+        FIRDatabase.database().reference().child("users-fans").child(user.uid!).child(uid).removeValue()
+        
+        headerView.followButton.setTitle("+ Follow", forState: .Normal)
+        headerView.followButton.backgroundColor = UIColor.clearColor()
     }
     
     func handleSegmentControl() {
