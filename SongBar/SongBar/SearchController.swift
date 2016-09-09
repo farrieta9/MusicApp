@@ -10,6 +10,17 @@ import UIKit
 import Firebase
 
 class SearchController: UIViewController {
+
+    let indicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView()
+        indicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.WhiteLarge
+        indicator.clipsToBounds = true
+        indicator.color = UIColor(white: 0.3, alpha: 0.9)
+        indicator.layer.cornerRadius = 5
+        indicator.hidesWhenStopped = true
+        indicator.translatesAutoresizingMaskIntoConstraints = false
+        return indicator
+    }()
     
     var peopleData = [User]()
     enum SearchContentType {
@@ -20,7 +31,6 @@ class SearchController: UIViewController {
 	
 	private let cellId = "cellId"
     var timer: NSTimer? = nil
-    var indicator = UIActivityIndicatorView()
 	let searchView: SearchView = {
 		let sv = SearchView()
 		sv.translatesAutoresizingMaskIntoConstraints = false
@@ -28,17 +38,15 @@ class SearchController: UIViewController {
 		return sv
 	}()
     
-    
-	
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
 		setUpSearchView()
-        activityIndicator()
 	}
 	
 	func setUpSearchView() {
 		view.addSubview(searchView)
+        view.addSubview(indicator)
         navigationItem.titleView = searchBar
         
         searchBar.delegate = self
@@ -47,6 +55,11 @@ class SearchController: UIViewController {
 		searchView.centerYAnchor.constraintEqualToAnchor(view.centerYAnchor).active = true
 		searchView.widthAnchor.constraintEqualToAnchor(view.widthAnchor).active = true
 		searchView.heightAnchor.constraintEqualToAnchor(view.heightAnchor).active = true
+        
+        indicator.centerXAnchor.constraintEqualToAnchor(view.centerXAnchor).active = true
+        indicator.centerYAnchor.constraintEqualToAnchor(view.centerYAnchor).active = true
+        indicator.widthAnchor.constraintEqualToConstant(50).active = true
+        indicator.heightAnchor.constraintEqualToConstant(50).active = true
 		
 		searchView.tableView.registerClass(ContentCell.self, forCellReuseIdentifier: cellId)
 		
@@ -77,14 +90,6 @@ class SearchController: UIViewController {
         return bar
     }()
     
-    func activityIndicator() {
-        indicator = UIActivityIndicatorView(frame: CGRectMake(0, 0, 40, 40))
-        indicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.Gray
-        indicator.center = self.view.center
-        indicator.clipsToBounds = true
-        self.view.addSubview(indicator)
-    }
-    
     func searchBarTextDidPause(timer: NSTimer) {
         // Custom method
         guard let text = searchBar.text?.lowercaseString else {
@@ -92,18 +97,13 @@ class SearchController: UIViewController {
             return
         }
         
-        indicator.stopAnimating()
-        indicator.hidesWhenStopped = true
-        
         if text.characters.count == 0 {
             clearTable()
             return
         }
-        
-        
+
         switch searchContent {
         case .Music:
-//            searchForMusic(text)
             print("searchForMusic")
         case .People:
             searchForPeople(text)
@@ -111,25 +111,34 @@ class SearchController: UIViewController {
     }
     
     private func searchForPeople(searchText: String) {
-        FIRDatabase.database().reference().child("users").queryOrderedByChild("username").queryStartingAtValue(searchText).observeSingleEventOfType(.ChildAdded, withBlock: { (snapshot) in
+        
+        guard let uid = FIRAuth.auth()?.currentUser?.uid else {
+            return
+        }
+        
+        FIRDatabase.database().reference().child("users").queryOrderedByChild("username").queryStartingAtValue(searchText).observeSingleEventOfType(.Value, withBlock: { (snapshot) in
+            
+            self.peopleData.removeAll()
             
             guard let result = snapshot.value as? [String: AnyObject] else {
                 return
             }
-            
-            let user = User()
-            
-            user.uid = snapshot.key
-            user.email = result["email"] as? String
-            user.username = result["username"] as? String
-            
-            if let imageUrl = result["imageUrl"] as? String {
-                user.imageUrl = imageUrl
+
+            for (key, value) in result {
+                if uid != key { // Do not display signed in user
+                    let user = User()
+                    user.uid = key
+                    user.email = value["email"] as? String
+                    user.username = value["username"] as? String
+                    
+                    if let imageUrl = value["imageUrl"] as? String {
+                        user.imageUrl = imageUrl
+                    }
+                    
+                    self.peopleData.append(user)
+                    self.attemptReloadTable()
+                }
             }
-            
-            self.peopleData.append(user)
-            self.attemptReloadTable()
-            
             
         }, withCancelBlock: nil)
     }
@@ -148,14 +157,13 @@ class SearchController: UIViewController {
     func handleReloadTable() {
         dispatch_async(dispatch_get_main_queue()) { 
             self.searchView.tableView.reloadData()
+            self.indicator.stopAnimating()
         }
     }
     
     func clearTable() -> Void {
         peopleData.removeAll()
-        dispatch_async(dispatch_get_main_queue()) {
-            self.searchView.tableView.reloadData()
-        }
+        attemptReloadTable()
     }
 }
 
@@ -194,8 +202,6 @@ extension SearchController: UITableViewDataSource {
         
         showUserControllerForUser(selectedUser)
     }
-    
-    
 }
 
 extension SearchController: UITableViewDelegate {
@@ -207,7 +213,7 @@ extension SearchController: UITableViewDelegate {
 extension SearchController: UISearchBarDelegate {
     func searchBar(searchBar: UISearchBar, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
         indicator.startAnimating()
-        indicator.backgroundColor = UIColor.whiteColor()
+        
         timer?.invalidate()
         timer = NSTimer.scheduledTimerWithTimeInterval(0.75, target: self, selector: #selector(self.searchBarTextDidPause(_:)), userInfo: searchBar.text, repeats: false)
         
