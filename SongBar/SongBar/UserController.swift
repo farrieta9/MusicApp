@@ -61,11 +61,9 @@ class UserController: UITableViewController {
         
         headerView.segmentControl.addTarget(self, action: #selector(self.handleSegmentControl), forControlEvents: .ValueChanged)
         headerView.followButton.addTarget(self, action: #selector(self.handleFollowButton), forControlEvents: .TouchUpInside)
-        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "more"), style: .Plain, target: self, action: #selector(handleSettings))
-
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "more"), style: .Plain, target: self, action: #selector(handleSettings))
 	}
 
-    
     func handleFollowButton() {
         guard let user = user else {
             return
@@ -235,6 +233,19 @@ class UserController: UITableViewController {
     func handleSettings() {
         settingsLauncher.showSettings()
     }
+    
+    func handleLogout() {
+        
+        do {
+            try FIRAuth.auth()?.signOut()
+        } catch let error {
+            print(error)
+        }
+        
+        let loginController = LoginController()
+        let navController = UINavigationController(rootViewController: loginController)
+        presentViewController(navController, animated: true, completion: nil)
+    }
 }
 
 extension UserController {
@@ -279,5 +290,52 @@ extension UserController {
     
     override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         return 70
+    }
+}
+
+extension UserController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+        guard let image = info[UIImagePickerControllerOriginalImage] as? UIImage else {
+            return
+        }
+        
+        uploadUserImageToFirebase(image)
+        dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    private func uploadUserImageToFirebase(image: UIImage) {
+        
+        guard let uploadImage = UIImageJPEGRepresentation(image, 0.1), uid = FIRAuth.auth()?.currentUser?.uid  else {
+            return
+        }
+        
+        FIRStorage.storage().reference().child("users-images").child(uid).putData(uploadImage, metadata: nil) { (metadata, error) in
+            if error != nil {
+                print(error)
+                return
+            }
+            
+            guard let imageURLString = metadata?.downloadURL()?.absoluteString else {
+                return
+            }
+            
+            let values = ["imageUrl": imageURLString]
+            FIRDatabase.database().reference().child("users").child(uid).updateChildValues(values)
+        }
+    }
+    
+    func imagePickerControllerDidCancel(picker: UIImagePickerController) {
+        dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    func launchImagePicker(sourceType: UIImagePickerControllerSourceType) {
+        if UIImagePickerController.isSourceTypeAvailable(sourceType) {
+            let picker = UIImagePickerController()
+            picker.sourceType = sourceType
+            picker.allowsEditing = false
+            picker.delegate = self
+            presentViewController(picker, animated: true, completion: nil)
+        }
     }
 }

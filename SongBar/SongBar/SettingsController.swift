@@ -70,12 +70,12 @@ class SettingsController: NSObject, UICollectionViewDelegate, UICollectionViewDa
             }
         }) { (completed: Bool) in
             if setting.name != "" && setting.name == "Logout" {
-//                self.messageController?.handleLogout()
+                self.userController?.handleLogout()
                 return
             }
             
             if setting.name != "" && setting.name == "Upload from library" {
-//                self.messageController?.launchImagePicker(.PhotoLibrary)
+                self.userController?.launchImagePicker(.PhotoLibrary)
                 return
             }
         }

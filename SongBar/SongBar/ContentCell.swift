@@ -21,6 +21,8 @@ class ContentCell: UITableViewCell {
             
             if let imageUrl = user.imageUrl {
                 thumbnailImageView.loadImageUsingURLString(imageUrl)
+            } else {
+                thumbnailImageView.loadImageUsingURLString("")
             }
         }
     }
