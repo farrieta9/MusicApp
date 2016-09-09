@@ -13,3 +13,38 @@ extension UIColor {
 		return UIColor(red: red/255, green: green/255, blue: blue/255, alpha: 1)
 	}
 }
+
+
+let imageCache = NSCache()  // Rename to cachedImages
+extension UIImageView {
+    func loadImageUsingURLString(urlString: String) {
+        let url = NSURL(string: urlString)
+        
+        image = nil
+        image = UIImage(named: "default_profile.png")
+        
+        if let imageFromCache = imageCache.objectForKey(urlString) as? UIImage {
+            self.image = imageFromCache
+            return
+        }
+        
+        if urlString == "" {
+            return // has no image in firebase
+        }
+        
+        NSURLSession.sharedSession().dataTaskWithURL(url!) { (data, response, error) in
+            if error != nil {
+                print(error)
+                return
+            }
+            dispatch_async(dispatch_get_main_queue(), {
+                
+                let imageToCache = UIImage(data: data!)
+                
+                imageCache.setObject(imageToCache!, forKey: urlString)
+                
+                self.image = imageToCache
+            })
+            }.resume()
+    }
+}

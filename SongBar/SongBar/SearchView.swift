@@ -21,12 +21,11 @@ class SearchView: UIView {
 		seg.translatesAutoresizingMaskIntoConstraints = false
 		seg.insertSegmentWithTitle("Music", atIndex: 0, animated: true)
 		seg.insertSegmentWithTitle("People", atIndex: 1, animated: true)
+        seg.selectedSegmentIndex = 0
 		return seg
 	}()
     
-    
-	
-	override init(frame: CGRect) {
+  	override init(frame: CGRect) {
 		super.init(frame: frame)
 		
 		setUpView()

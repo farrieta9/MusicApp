@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 
 class FeedController: UICollectionViewController {
 	
@@ -14,11 +15,41 @@ class FeedController: UICollectionViewController {
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
+        checkIfUserIsSignedIn()
 		navigationItem.title = "Feed"
 		collectionView?.backgroundColor = UIColor.whiteColor()
 		collectionView?.registerClass(FeedCell.self, forCellWithReuseIdentifier: cellId)
         collectionView?.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 150, right: 0)
 	}
+    
+    func checkIfUserIsSignedIn() {
+        if FIRAuth.auth()?.currentUser?.uid == nil {
+            // To remove error 'Unbalanced calls to begin end appearance transitions for UINavCtrl
+            performSelector(#selector(handleLogout), withObject: nil, afterDelay: 0)
+        } else {
+            let uid = FIRAuth.auth()?.currentUser?.uid
+            FIRDatabase.database().reference().child("users").child(uid!).observeSingleEventOfType(.Value, withBlock: { (snapshot) in
+                
+                if let results = snapshot.value as? [String: AnyObject] {
+                    self.navigationItem.title = results["username"] as? String
+                }
+                
+                }, withCancelBlock: nil)
+        }
+    }
+
+    func handleLogout() {
+        
+        do {
+            try FIRAuth.auth()?.signOut()
+        } catch let error {
+            print(error)
+        }
+        
+        let loginController = LoginController()
+        let navController = UINavigationController(rootViewController: loginController)
+        presentViewController(navController, animated: true, completion: nil)
+    }
 	
 	override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 		return 5
@@ -27,7 +58,6 @@ class FeedController: UICollectionViewController {
 	override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
 		let cell = collectionView.dequeueReusableCellWithReuseIdentifier(cellId, forIndexPath: indexPath) as! FeedCell
 		
-//		cell.backgroundColor = UIColor.redColor()
 		cell.thumbnailImageView.image = UIImage(named: "default_profile")
 		cell.userImageView.image = UIImage(named: "default_profile")
 		

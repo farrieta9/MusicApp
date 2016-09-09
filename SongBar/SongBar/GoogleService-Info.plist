@@ -7,21 +7,21 @@
 	<key>AD_UNIT_ID_FOR_INTERSTITIAL_TEST</key>
 	<string>ca-app-pub-3940256099942544/4411468910</string>
 	<key>CLIENT_ID</key>
-	<string>436964183425-qhkib0g1ltuapb698h8ribcm8qudvu99.apps.googleusercontent.com</string>
+	<string>1049369668730-21e7le8gt81te2t44s67r46ctod0mu7r.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.436964183425-qhkib0g1ltuapb698h8ribcm8qudvu99</string>
+	<string>com.googleusercontent.apps.1049369668730-21e7le8gt81te2t44s67r46ctod0mu7r</string>
 	<key>API_KEY</key>
-	<string>AIzaSyAtr-0U7X2NcLBRSew2_ml3Jui_-5Ahpig</string>
+	<string>AIzaSyDc8ojtiU0rETrGE7k69JUP-tL8vgRKEGc</string>
 	<key>GCM_SENDER_ID</key>
-	<string>436964183425</string>
+	<string>1049369668730</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.lil9porkchop.SongBar</string>
 	<key>PROJECT_ID</key>
-	<string>songbar-e87a2</string>
+	<string>songbar-dcede</string>
 	<key>STORAGE_BUCKET</key>
-	<string>songbar-e87a2.appspot.com</string>
+	<string>songbar-dcede.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<true/>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -33,8 +33,8 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true/>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:436964183425:ios:5daf1e44f9e4b3f4</string>
+	<string>1:1049369668730:ios:5daf1e44f9e4b3f4</string>
 	<key>DATABASE_URL</key>
-	<string>https://songbar-e87a2.firebaseio.com</string>
+	<string>https://songbar-dcede.firebaseio.com</string>
 </dict>
 </plist>

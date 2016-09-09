@@ -9,8 +9,22 @@
 import UIKit
 
 class ContentCell: UITableViewCell {
+    
+    var user: User? {
+        didSet {
+            guard let user = user else {
+                return
+            }
+            
+            textLabel?.text = user.username
+            detailTextLabel?.text = user.email
+            
+            if let imageUrl = user.imageUrl {
+                thumbnailImageView.loadImageUsingURLString(imageUrl)
+            }
+        }
+    }
 
-	
 	override func layoutSubviews() {
 		super.layoutSubviews()
 		
