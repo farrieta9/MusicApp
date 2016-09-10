@@ -15,6 +15,7 @@ class UserHeader: UIView {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         let image = UIImage(named: "default_profile")
         imageView.image = image
+        imageView.contentMode = .ScaleAspectFit
         return imageView
     }()
     
@@ -55,6 +56,13 @@ class UserHeader: UIView {
         return button
     }()
     
+    let seperatorView: UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor.rgb(200, green: 200, blue: 200)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setUpView()
@@ -66,6 +74,7 @@ class UserHeader: UIView {
         addSubview(fullnameLabel)
         addSubview(segmentControl)
         addSubview(followButton)
+        addSubview(seperatorView)
         
         // Setup contraints
         pictureView.topAnchor.constraintEqualToAnchor(topAnchor, constant: 16).active = true
@@ -86,6 +95,11 @@ class UserHeader: UIView {
         followButton.centerYAnchor.constraintEqualToAnchor(pictureView.centerYAnchor, constant: 0).active = true
         followButton.rightAnchor.constraintEqualToAnchor(rightAnchor, constant: -16).active = true
         followButton.widthAnchor.constraintEqualToConstant(100).active = true
+        
+        seperatorView.centerXAnchor.constraintEqualToAnchor(centerXAnchor).active = true
+        seperatorView.widthAnchor.constraintEqualToAnchor(widthAnchor).active = true
+        seperatorView.heightAnchor.constraintEqualToConstant(1).active = true
+        seperatorView.topAnchor.constraintEqualToAnchor(segmentControl.bottomAnchor, constant: 8).active = true
         
     }
     

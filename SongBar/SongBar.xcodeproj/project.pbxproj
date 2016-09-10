@@ -14,11 +14,12 @@
 		8C28B1BF1D7E8DAE00661FE4 /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C28B1BE1D7E8DAE00661FE4 /* SearchView.swift */; };
 		8C28B1C11D7E91B200661FE4 /* ContentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C28B1C01D7E91B200661FE4 /* ContentCell.swift */; };
 		8C402E681D7E360600314A87 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C402E671D7E360600314A87 /* AppDelegate.swift */; };
-		8C402E6F1D7E360600314A87 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8C402E6E1D7E360600314A87 /* Assets.xcassets */; };
 		8C402E721D7E360600314A87 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8C402E701D7E360600314A87 /* LaunchScreen.storyboard */; };
 		8C4FFAB01D7E53BF00477B36 /* FeedController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4FFAAF1D7E53BF00477B36 /* FeedController.swift */; };
 		8C4FFAB41D7E573900477B36 /* FeedCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4FFAB31D7E573900477B36 /* FeedCell.swift */; };
 		8C4FFAB71D7E618F00477B36 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4FFAB61D7E618F00477B36 /* Extensions.swift */; };
+		8C5858801D84C679001861BA /* ShareController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C58587F1D84C679001861BA /* ShareController.swift */; };
+		8C5858821D84C972001861BA /* InputContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C5858811D84C972001861BA /* InputContainerView.swift */; };
 		8C89A3E71D8232EE00BA827E /* UserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C89A3E61D8232EE00BA827E /* UserCell.swift */; };
 		8C89A3E91D823D9F00BA827E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8C89A3E81D823D9F00BA827E /* GoogleService-Info.plist */; };
 		8C89A3EB1D823DD500BA827E /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C89A3EA1D823DD500BA827E /* LoginView.swift */; };
@@ -26,9 +27,13 @@
 		8C89A3EF1D823F0100BA827E /* RegisterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C89A3EE1D823F0100BA827E /* RegisterView.swift */; };
 		8C89A3F11D823F0A00BA827E /* RegisterController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C89A3F01D823F0A00BA827E /* RegisterController.swift */; };
 		8C89A3F41D8241D800BA827E /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C89A3F31D8241D800BA827E /* User.swift */; };
+		8C8ADE391D84937D005AE4CF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8C8ADE381D84937D005AE4CF /* Assets.xcassets */; };
 		8C9E0A7D1D837A610067D862 /* SettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C9E0A7C1D837A610067D862 /* SettingsController.swift */; };
 		8C9E0A7F1D837AEE0067D862 /* SettingsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C9E0A7E1D837AEE0067D862 /* SettingsCell.swift */; };
 		8C9E0A811D837BEE0067D862 /* Setting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C9E0A801D837BEE0067D862 /* Setting.swift */; };
+		8CA16E811D83DDA200836E42 /* SpotifyApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CA16E801D83DDA200836E42 /* SpotifyApi.swift */; };
+		8CA16E831D84642E00836E42 /* SpotifyTrack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CA16E821D84642E00836E42 /* SpotifyTrack.swift */; };
+		8CA16E851D846D9600836E42 /* MusicPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CA16E841D846D9600836E42 /* MusicPlayer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -41,12 +46,13 @@
 		8C28B1C01D7E91B200661FE4 /* ContentCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentCell.swift; sourceTree = "<group>"; };
 		8C402E641D7E360600314A87 /* SongBar.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SongBar.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8C402E671D7E360600314A87 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		8C402E6E1D7E360600314A87 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8C402E711D7E360600314A87 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8C402E731D7E360600314A87 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8C4FFAAF1D7E53BF00477B36 /* FeedController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedController.swift; sourceTree = "<group>"; };
 		8C4FFAB31D7E573900477B36 /* FeedCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedCell.swift; sourceTree = "<group>"; };
 		8C4FFAB61D7E618F00477B36 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		8C58587F1D84C679001861BA /* ShareController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShareController.swift; sourceTree = "<group>"; };
+		8C5858811D84C972001861BA /* InputContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InputContainerView.swift; sourceTree = "<group>"; };
 		8C89A3E61D8232EE00BA827E /* UserCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserCell.swift; sourceTree = "<group>"; };
 		8C89A3E81D823D9F00BA827E /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		8C89A3EA1D823DD500BA827E /* LoginView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
@@ -54,9 +60,13 @@
 		8C89A3EE1D823F0100BA827E /* RegisterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegisterView.swift; sourceTree = "<group>"; };
 		8C89A3F01D823F0A00BA827E /* RegisterController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegisterController.swift; sourceTree = "<group>"; };
 		8C89A3F31D8241D800BA827E /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		8C8ADE381D84937D005AE4CF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8C9E0A7C1D837A610067D862 /* SettingsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsController.swift; sourceTree = "<group>"; };
 		8C9E0A7E1D837AEE0067D862 /* SettingsCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsCell.swift; sourceTree = "<group>"; };
 		8C9E0A801D837BEE0067D862 /* Setting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Setting.swift; sourceTree = "<group>"; };
+		8CA16E801D83DDA200836E42 /* SpotifyApi.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpotifyApi.swift; sourceTree = "<group>"; };
+		8CA16E821D84642E00836E42 /* SpotifyTrack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpotifyTrack.swift; sourceTree = "<group>"; };
+		8CA16E841D846D9600836E42 /* MusicPlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicPlayer.swift; sourceTree = "<group>"; };
 		9AEB8E3EA73BE7A07A232218 /* Pods_SongBar.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SongBar.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -115,7 +125,7 @@
 				8C4FFAB21D7E571900477B36 /* View */,
 				8C4FFAB11D7E557F00477B36 /* Controller */,
 				8C402E671D7E360600314A87 /* AppDelegate.swift */,
-				8C402E6E1D7E360600314A87 /* Assets.xcassets */,
+				8C8ADE381D84937D005AE4CF /* Assets.xcassets */,
 				8C402E701D7E360600314A87 /* LaunchScreen.storyboard */,
 				8C402E731D7E360600314A87 /* Info.plist */,
 				8C89A3E81D823D9F00BA827E /* GoogleService-Info.plist */,
@@ -133,6 +143,7 @@
 				8C89A3EC1D823DF700BA827E /* LoginController.swift */,
 				8C89A3F01D823F0A00BA827E /* RegisterController.swift */,
 				8C9E0A7C1D837A610067D862 /* SettingsController.swift */,
+				8C58587F1D84C679001861BA /* ShareController.swift */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -147,6 +158,7 @@
 				8C89A3EA1D823DD500BA827E /* LoginView.swift */,
 				8C89A3EE1D823F0100BA827E /* RegisterView.swift */,
 				8C9E0A7E1D837AEE0067D862 /* SettingsCell.swift */,
+				8C5858811D84C972001861BA /* InputContainerView.swift */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -164,6 +176,9 @@
 			children = (
 				8C89A3F31D8241D800BA827E /* User.swift */,
 				8C9E0A801D837BEE0067D862 /* Setting.swift */,
+				8CA16E801D83DDA200836E42 /* SpotifyApi.swift */,
+				8CA16E821D84642E00836E42 /* SpotifyTrack.swift */,
+				8CA16E841D846D9600836E42 /* MusicPlayer.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -231,7 +246,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8C402E721D7E360600314A87 /* LaunchScreen.storyboard in Resources */,
-				8C402E6F1D7E360600314A87 /* Assets.xcassets in Resources */,
+				8C8ADE391D84937D005AE4CF /* Assets.xcassets in Resources */,
 				8C89A3E91D823D9F00BA827E /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -292,20 +307,25 @@
 			buildActionMask = 2147483647;
 			files = (
 				8C4FFAB01D7E53BF00477B36 /* FeedController.swift in Sources */,
+				8C5858821D84C972001861BA /* InputContainerView.swift in Sources */,
 				8C89A3ED1D823DF700BA827E /* LoginController.swift in Sources */,
 				8C89A3EF1D823F0100BA827E /* RegisterView.swift in Sources */,
 				8C9E0A7F1D837AEE0067D862 /* SettingsCell.swift in Sources */,
+				8CA16E811D83DDA200836E42 /* SpotifyApi.swift in Sources */,
 				8C28B1B91D7E8B2A00661FE4 /* SearchController.swift in Sources */,
 				8C402E681D7E360600314A87 /* AppDelegate.swift in Sources */,
 				8C28B1C11D7E91B200661FE4 /* ContentCell.swift in Sources */,
 				8C28B1BB1D7E8B8D00661FE4 /* AppTabBarController.swift in Sources */,
 				8C9E0A811D837BEE0067D862 /* Setting.swift in Sources */,
 				8C28B1BF1D7E8DAE00661FE4 /* SearchView.swift in Sources */,
+				8CA16E851D846D9600836E42 /* MusicPlayer.swift in Sources */,
 				8C9E0A7D1D837A610067D862 /* SettingsController.swift in Sources */,
 				8C89A3F41D8241D800BA827E /* User.swift in Sources */,
 				8C28B1BD1D7E8BA100661FE4 /* UserController.swift in Sources */,
+				8C5858801D84C679001861BA /* ShareController.swift in Sources */,
 				8C4FFAB41D7E573900477B36 /* FeedCell.swift in Sources */,
 				8C89A3F11D823F0A00BA827E /* RegisterController.swift in Sources */,
+				8CA16E831D84642E00836E42 /* SpotifyTrack.swift in Sources */,
 				8C89A3EB1D823DD500BA827E /* LoginView.swift in Sources */,
 				8C89A3E71D8232EE00BA827E /* UserCell.swift in Sources */,
 				8C4FFAB71D7E618F00477B36 /* Extensions.swift in Sources */,

@@ -9,6 +9,13 @@
 import UIKit
 
 class SearchView: UIView {
+    
+    let separatorView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = UIColor(white: 0.5, alpha: 0.3)
+        return view
+    }()
 	
 	let tableView: UITableView = {
 		let tv = UITableView()
@@ -34,17 +41,21 @@ class SearchView: UIView {
 	func setUpView() {
 		addSubview(segmentControl)
 		addSubview(tableView)
-		
-		segmentControl.topAnchor.constraintEqualToAnchor(topAnchor, constant: 72).active = true
-		segmentControl.widthAnchor.constraintEqualToAnchor(widthAnchor, constant: -16).active = true
+        addSubview(separatorView)
+		segmentControl.topAnchor.constraintEqualToAnchor(topAnchor, constant: 68).active = true
+		segmentControl.widthAnchor.constraintEqualToAnchor(widthAnchor, constant: -8).active = true
 		segmentControl.heightAnchor.constraintEqualToConstant(32).active = true
 		segmentControl.centerXAnchor.constraintEqualToAnchor(centerXAnchor, constant: 0).active = true
-		
 		
 		tableView.centerXAnchor.constraintEqualToAnchor(centerXAnchor).active = true
 		tableView.topAnchor.constraintEqualToAnchor(segmentControl.bottomAnchor, constant: 8).active = true
 		tableView.widthAnchor.constraintEqualToAnchor(widthAnchor).active = true
 		tableView.heightAnchor.constraintEqualToAnchor(heightAnchor).active = true
+        
+        separatorView.centerXAnchor.constraintEqualToAnchor(centerXAnchor).active = true
+        separatorView.widthAnchor.constraintEqualToAnchor(widthAnchor).active = true
+        separatorView.heightAnchor.constraintEqualToConstant(1).active = true
+        separatorView.topAnchor.constraintEqualToAnchor(segmentControl.bottomAnchor, constant: 4).active = true
 	}
 	
 	required init?(coder aDecoder: NSCoder) {

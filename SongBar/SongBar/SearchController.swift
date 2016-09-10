@@ -23,6 +23,7 @@ class SearchController: UIViewController {
     }()
     
     var peopleData = [User]()
+    var musicData = [SpotifyTrack]()
     enum SearchContentType {
         case Music
         case People
@@ -65,6 +66,7 @@ class SearchController: UIViewController {
 		
 		searchView.tableView.dataSource = self
 		searchView.tableView.delegate = self
+        searchView.tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 250, right: 0)
         
         searchView.segmentControl.addTarget(self, action: #selector(handleSegmentControl), forControlEvents: .ValueChanged)
 	}
@@ -78,6 +80,8 @@ class SearchController: UIViewController {
         default:
             break
         }
+        
+        attemptReloadTable()
     }
 
     let searchBar: UISearchBar = {
@@ -104,7 +108,7 @@ class SearchController: UIViewController {
 
         switch searchContent {
         case .Music:
-            print("searchForMusic")
+            searchForMusic(text)
         case .People:
             searchForPeople(text)
         }
@@ -176,7 +180,7 @@ extension SearchController: UITableViewDataSource {
 	func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch searchContent {
         case .Music:
-            return 0
+            return musicData.count
         case .People:
             return peopleData.count
         }
@@ -189,8 +193,7 @@ extension SearchController: UITableViewDataSource {
         
         switch searchContent {
         case .Music:
-            cell.detailTextLabel?.text = "Some detail"
-            cell.textLabel?.text = "Some fancy text"
+            cell.track = musicData[indexPath.row]
         case .People:
             cell.user = peopleData[indexPath.row]
         }
@@ -199,9 +202,29 @@ extension SearchController: UITableViewDataSource {
 	}
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        let selectedUser = peopleData[indexPath.row]
-        
-        showUserControllerForUser(selectedUser)
+        searchBar.resignFirstResponder()
+        switch searchContent {
+        case .Music:
+            showShareControllerWithTrack(musicData[indexPath.row])
+        case .People:
+            let selectedUser = peopleData[indexPath.row]
+            showUserControllerForUser(selectedUser)
+        }
+    }
+    
+    func searchForMusic(searchText: String) {
+        SpotifyApi.search(searchText) {
+            (tracks) in dispatch_async(dispatch_get_main_queue()) {
+                self.musicData = tracks
+                self.attemptReloadTable()
+            }
+        }
+    }
+    
+    func showShareControllerWithTrack(track: SpotifyTrack) {
+        let shareController = ShareController()
+        shareController.track = track
+        navigationController?.pushViewController(shareController, animated: true)
     }
 }
 
@@ -209,6 +232,30 @@ extension SearchController: UITableViewDelegate {
 	func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
 		return 72
 	}
+    
+    func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
+        let playAction = UITableViewRowAction()
+        
+        return [playAction]
+    }
+    
+    func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+        // you need to implement this method too or you can't swipe to display the actions
+    }
+    
+    func tableView(tableView: UITableView, willBeginEditingRowAtIndexPath indexPath: NSIndexPath) {
+        switch searchContent {
+        case .Music:
+            MusicPlayer.playSong(musicData[indexPath.row])
+            self.searchBar.resignFirstResponder()
+        default:
+            return
+        }
+    }
+    
+    func scrollViewWillBeginDragging(scrollView: UIScrollView) {
+        searchBar.resignFirstResponder()
+    }
 }
 
 extension SearchController: UISearchBarDelegate {

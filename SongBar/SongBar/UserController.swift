@@ -20,6 +20,7 @@ class UserController: UITableViewController {
     var timer: NSTimer? = nil
     var followingData = [User]()
     var fansData = [User]()
+    var postData = [SpotifyTrack]()
     
     enum ContentOptions {
         case Posts, Fans, Following
@@ -42,10 +43,13 @@ class UserController: UITableViewController {
                 headerView.pictureView.loadImageUsingURLString(imageUrl)
             }
             
+            observePosts()
             observeFollowing()
             observeFans()
+            
         }
     }
+    
 
     let headerView: UserHeader = {
         let view = UserHeader()
@@ -185,7 +189,6 @@ class UserController: UITableViewController {
                 self.followingData.append(user)
                 self.attemptReloadTable()
                 
-                
             }, withCancelBlock: nil)
         }, withCancelBlock: nil)
     }
@@ -194,7 +197,6 @@ class UserController: UITableViewController {
         guard let uid = user?.uid else {
             return
         }
-        
         
         FIRDatabase.database().reference().child("users-fans").child(uid).observeEventType(.ChildAdded, withBlock: { (snapshot) in
             
@@ -216,7 +218,28 @@ class UserController: UITableViewController {
                 self.attemptReloadTable()
                 
                 }, withCancelBlock: nil)
-            }, withCancelBlock: nil)
+        }, withCancelBlock: nil)
+    }
+    
+    
+    func observePosts() {
+        guard let uid = user?.uid else {
+            return
+        }
+        
+        FIRDatabase.database().reference().child("users-sent").child(uid).observeEventType(.ChildAdded, withBlock: { (snapshot) in
+            
+            guard let result = snapshot.value as? [String: AnyObject] else {
+                return
+            }
+            
+            let track = SpotifyTrack()
+            track.setValuesForKeysWithDictionary(result)
+            
+            self.postData.append(track)
+            self.attemptReloadTable()
+            
+        }, withCancelBlock: nil)
     }
     
     private func attemptReloadTable() {
@@ -251,12 +274,12 @@ class UserController: UITableViewController {
 extension UserController {
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch contentOption {
+        case .Posts:
+            return postData.count
         case .Fans:
             return fansData.count
         case .Following:
             return followingData.count
-        default:
-            return 9
         }
     }
     
@@ -267,14 +290,14 @@ extension UserController {
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier(cellId, forIndexPath: indexPath) as! ContentCell
         
+        cell.thumbnailImageView.loadImageUsingURLString("")
         switch contentOption {
+        case .Posts:
+            cell.track = postData[indexPath.row]
         case .Fans:
             cell.user = fansData[indexPath.row]
         case .Following:
             cell.user = followingData[indexPath.row]
-        default:
-            cell.textLabel?.text = "some username"
-            cell.detailTextLabel?.text = "some detail about the cosmos"
         }
         
         return cell

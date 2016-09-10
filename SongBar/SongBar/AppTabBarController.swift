@@ -15,7 +15,7 @@ class AppTabBarController: UITabBarController {
 		view.backgroundColor = UIColor.blueColor()
         view.backgroundColor = UIColor.rgb(225, green: 225, blue: 225)
 		view.translatesAutoresizingMaskIntoConstraints = false
-		view.hidden = false
+		view.hidden = true
 		return view
 	}()
     
@@ -51,12 +51,14 @@ class AppTabBarController: UITabBarController {
         return label
     }()
     
-    let spotifyLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Powered by Spotify"
-        label.font = UIFont.systemFontOfSize(12)
-        return label
+    let spotifyIconImageView: UIImageView = {
+        let imageView = UIImageView()
+        let image = UIImage(named: "spotify_icon_cmyk_green")
+        imageView.image = image
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .ScaleAspectFit
+        imageView.clipsToBounds = true
+        return imageView
     }()
 	
 	override func viewDidLoad() {
@@ -78,17 +80,18 @@ class AppTabBarController: UITabBarController {
 		userNavigationController.tabBarItem.image = UIImage(named: "neutral_user")
 		
 		viewControllers = [feedNavigationController, searchNavigationController, userNavigationController]
-		
+        
+        setUpMusicPlayer()
 		
 		view.addSubview(playerView)
         playerView.addSubview(playPauseButton)
         playerView.addSubview(stopButton)
         playerView.addSubview(titleLabel)
         playerView.addSubview(detailLabel)
-        playerView.addSubview(spotifyLabel)
+        playerView.addSubview(spotifyIconImageView)
 		setUpContraints()
 	}
-	
+    
 	private func setUpContraints() {
 		// Need x, y, width, and height
 		playerView.centerXAnchor.constraintEqualToAnchor(view.centerXAnchor).active = true
@@ -108,9 +111,50 @@ class AppTabBarController: UITabBarController {
         detailLabel.leftAnchor.constraintEqualToAnchor(playPauseButton.rightAnchor, constant: 8).active = true
         detailLabel.topAnchor.constraintEqualToAnchor(titleLabel.bottomAnchor, constant: 4).active = true
         
-        spotifyLabel.centerXAnchor.constraintEqualToAnchor(playerView.centerXAnchor).active = true
-        spotifyLabel.bottomAnchor.constraintEqualToAnchor(playerView.bottomAnchor, constant: -4).active = true
+        spotifyIconImageView.rightAnchor.constraintEqualToAnchor(stopButton.leftAnchor, constant: -4).active = true
+        spotifyIconImageView.bottomAnchor.constraintEqualToAnchor(playerView.bottomAnchor, constant: -4).active = true
+        spotifyIconImageView.widthAnchor.constraintEqualToConstant(21).active = true
+        spotifyIconImageView.heightAnchor.constraintEqualToConstant(21).active = true
 	}
+    
+    private func setUpMusicPlayer() {
+        MusicPlayer.playView = playerView
+        MusicPlayer.titleLabel = titleLabel
+        MusicPlayer.detailLabel = detailLabel
+        MusicPlayer.playButton = playPauseButton
+        stopButton.addTarget(self, action: #selector(self.onStopButton(_:)), forControlEvents: UIControlEvents.TouchUpInside)
+        playPauseButton.addTarget(self, action: #selector(self.onPlayButton(_:)), forControlEvents: UIControlEvents.TouchUpInside)
+    }
+    
+    func onStopButton(sender: UIButton) {
+        guard let audioPlayer = MusicPlayer.audioPlay else {
+            return
+        }
+        
+        playerView.hidden = true
+        audioPlayer.pause()
+    }
+    
+    func onPlayButton(sender: UIButton) {
+        guard let audioPlayer = MusicPlayer.audioPlay else {
+            return
+        }
+        
+        switch MusicPlayer.musicStatus {
+        case .Pause:
+            MusicPlayer.musicStatus = .Play
+            let image = UIImage(named: "pause")
+            sender.setImage(image, forState: .Normal)
+            audioPlayer.play()
+            
+        case .Play:
+            MusicPlayer.musicStatus = .Pause
+            let image = UIImage(named: "play")
+            sender.setImage(image, forState: .Normal)
+            audioPlayer.pause()
+        }
+        
+    }
 }
 
 
