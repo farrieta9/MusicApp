@@ -63,8 +63,9 @@ class AppTabBarController: UITabBarController {
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
-
+        
 		let layout = UICollectionViewFlowLayout()
+        layout.minimumLineSpacing = 0
 		let feedController = FeedController(collectionViewLayout: layout)
 		let feedNavigationController = UINavigationController(rootViewController: feedController)
 		feedNavigationController.tabBarItem.image = UIImage(named: "activity_feed")
@@ -73,10 +74,12 @@ class AppTabBarController: UITabBarController {
 		let searchController = SearchController()
 		let searchNavigationController = UINavigationController(rootViewController: searchController)
 		searchNavigationController.tabBarItem.title = "Search"
+        searchNavigationController.tabBarItem.image = UIImage(named: "Search-50")
 		
 		let userController = UserController()
 		let userNavigationController = UINavigationController(rootViewController: userController)
 		userNavigationController.tabBarItem.title = "Profile"
+
 		userNavigationController.tabBarItem.image = UIImage(named: "neutral_user")
 		
 		viewControllers = [feedNavigationController, searchNavigationController, userNavigationController]

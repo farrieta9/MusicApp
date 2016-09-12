@@ -58,7 +58,6 @@ class ContentCell: UITableViewCell {
 		imageView.translatesAutoresizingMaskIntoConstraints = false
 		imageView.contentMode = .ScaleAspectFill
 		imageView.layer.cornerRadius = 25
-//		imageView.layer.masksToBounds = true
         imageView.clipsToBounds = true
 		return imageView
 	}()

@@ -20,7 +20,7 @@
 		8C4FFAB71D7E618F00477B36 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4FFAB61D7E618F00477B36 /* Extensions.swift */; };
 		8C5858801D84C679001861BA /* ShareController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C58587F1D84C679001861BA /* ShareController.swift */; };
 		8C5858821D84C972001861BA /* InputContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C5858811D84C972001861BA /* InputContainerView.swift */; };
-		8C89A3E71D8232EE00BA827E /* UserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C89A3E61D8232EE00BA827E /* UserCell.swift */; };
+		8C89A3E71D8232EE00BA827E /* UserHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C89A3E61D8232EE00BA827E /* UserHeader.swift */; };
 		8C89A3E91D823D9F00BA827E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8C89A3E81D823D9F00BA827E /* GoogleService-Info.plist */; };
 		8C89A3EB1D823DD500BA827E /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C89A3EA1D823DD500BA827E /* LoginView.swift */; };
 		8C89A3ED1D823DF700BA827E /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C89A3EC1D823DF700BA827E /* LoginController.swift */; };
@@ -53,7 +53,7 @@
 		8C4FFAB61D7E618F00477B36 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		8C58587F1D84C679001861BA /* ShareController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShareController.swift; sourceTree = "<group>"; };
 		8C5858811D84C972001861BA /* InputContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InputContainerView.swift; sourceTree = "<group>"; };
-		8C89A3E61D8232EE00BA827E /* UserCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserCell.swift; sourceTree = "<group>"; };
+		8C89A3E61D8232EE00BA827E /* UserHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserHeader.swift; sourceTree = "<group>"; };
 		8C89A3E81D823D9F00BA827E /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		8C89A3EA1D823DD500BA827E /* LoginView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		8C89A3EC1D823DF700BA827E /* LoginController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
@@ -154,7 +154,7 @@
 				8C4FFAB31D7E573900477B36 /* FeedCell.swift */,
 				8C28B1BE1D7E8DAE00661FE4 /* SearchView.swift */,
 				8C28B1C01D7E91B200661FE4 /* ContentCell.swift */,
-				8C89A3E61D8232EE00BA827E /* UserCell.swift */,
+				8C89A3E61D8232EE00BA827E /* UserHeader.swift */,
 				8C89A3EA1D823DD500BA827E /* LoginView.swift */,
 				8C89A3EE1D823F0100BA827E /* RegisterView.swift */,
 				8C9E0A7E1D837AEE0067D862 /* SettingsCell.swift */,
@@ -327,7 +327,7 @@
 				8C89A3F11D823F0A00BA827E /* RegisterController.swift in Sources */,
 				8CA16E831D84642E00836E42 /* SpotifyTrack.swift in Sources */,
 				8C89A3EB1D823DD500BA827E /* LoginView.swift in Sources */,
-				8C89A3E71D8232EE00BA827E /* UserCell.swift in Sources */,
+				8C89A3E71D8232EE00BA827E /* UserHeader.swift in Sources */,
 				8C4FFAB71D7E618F00477B36 /* Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

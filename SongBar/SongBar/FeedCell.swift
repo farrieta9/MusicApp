@@ -7,8 +7,44 @@
 //
 
 import UIKit
+import Firebase
 
 class FeedCell: UICollectionViewCell {
+    
+    var track: SpotifyTrack? {
+        didSet {
+            guard let track = track else {
+                return
+            }
+            
+            titleLabel.text = track.title
+            subTitleLabel.text = track.artist
+            commentLabel.text = track.comment
+            fetchDonorByUid(track.donor!)
+            thumbnailImageView.loadImageUsingURLString(track.imageUrl)
+        }
+    }
+    
+    private func fetchDonorByUid(uid: String) {
+        FIRDatabase.database().reference().child("users").child(uid).observeSingleEventOfType(.Value, withBlock: { (snapshot) in
+
+            guard let result = snapshot.value as? [String: AnyObject] else {
+                return
+            }
+            
+            let user = User()
+            user.setValuesForKeysWithDictionary(result)
+            
+            self.usernameLabel.text = user.username
+            if let imageUrl = user.imageUrl {
+                self.userImageView.loadImageUsingURLString(imageUrl)
+            } else {
+                self.userImageView.loadImageUsingURLString("")
+            }
+            
+            
+        }, withCancelBlock: nil)
+    }
 	
 	let thumbnailImageView: UIImageView	= {
 		let imageView = UIImageView()
@@ -21,6 +57,7 @@ class FeedCell: UICollectionViewCell {
 		let label = UILabel()
 		label.text = "Some song"
 		label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.boldSystemFontOfSize(16)
 		return label
 	}()
 	
@@ -28,6 +65,7 @@ class FeedCell: UICollectionViewCell {
 		let label = UILabel()
 		label.text = "Some artist name here"
 		label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.systemFontOfSize(14)
 		return label
 	}()
 	
@@ -41,16 +79,15 @@ class FeedCell: UICollectionViewCell {
 	let userImageView: UIImageView = {
 		let imageView = UIImageView()
 		imageView.translatesAutoresizingMaskIntoConstraints = false
-		imageView.contentMode = UIViewContentMode.ScaleAspectFit
+		imageView.contentMode = UIViewContentMode.ScaleAspectFill
         imageView.layer.cornerRadius = 22
-        imageView.layer.masksToBounds = true
+        imageView.clipsToBounds = true
 		return imageView
 	}()
 	
 	let trackView: UIView = {
 		let view = UIView()
 		view.translatesAutoresizingMaskIntoConstraints = false
-		view.backgroundColor = UIColor.greenColor()
 		return view
 	}()
 	
@@ -64,6 +101,7 @@ class FeedCell: UICollectionViewCell {
 		let label = UILabel()
 		label.text = "Username"
 		label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.boldSystemFontOfSize(16)
 		return label
 	}()
 	
@@ -112,7 +150,7 @@ class FeedCell: UICollectionViewCell {
 		
 		separateView.widthAnchor.constraintEqualToAnchor(widthAnchor).active = true
 		separateView.heightAnchor.constraintEqualToConstant(1).active = true
-		separateView.topAnchor.constraintEqualToAnchor(trackView.bottomAnchor).active = true
+		separateView.topAnchor.constraintEqualToAnchor(trackView.topAnchor).active = true
 		separateView.centerXAnchor.constraintEqualToAnchor(centerXAnchor).active = true
 		
 		descriptionView.addSubview(userImageView)

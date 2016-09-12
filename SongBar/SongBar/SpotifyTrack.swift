@@ -14,8 +14,9 @@ class SpotifyTrack: NSObject {
     var artist = ""
     var previewUrl = ""
     var imageUrl = ""
-    var timestamp: String?
+    var timestamp: NSNumber?
     var comment: String?
+    var donor: String?
     
     override init() {}
     

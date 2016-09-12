@@ -60,53 +60,24 @@ class ShareController: UITableViewController {
         
         var value = ["title": track.title, "artist": track.artist, "imageUrl": track.imageUrl, "previewUrl": track.previewUrl, "comment": comment]
         
-        FIRDatabase.database().reference().child("users-sent").child(uid).child(date).updateChildValues(value)
+        FIRDatabase.database().reference().child("songs-sent").child(uid).child(date).updateChildValues(value)
         
         value["donor"] = uid
         
+        FIRDatabase.database().reference().child("songs-shared").child(uid).child(date).updateChildValues(value)
+        
+        
+        
         for row in selectedRows {
             if let fanUid = fansData[row].uid {
-                FIRDatabase.database().reference().child("users-received").child(fanUid).child(date).updateChildValues(value)
+                FIRDatabase.database().reference().child("songs-shared").child(fanUid).child(date).updateChildValues(value)
             }
         }
         
         navigationController?.popViewControllerAnimated(true)
 
     }
-    
-//    func handleSend() {
-//        guard let currentUserUid = CurrentUser.uid, username = CurrentUser.username else {
-//            return // No signed in user
-//        }
-//        
-//        if selectedRows.count == 0 {
-//            return
-//        }
-//        
-//        let date = String(Int(NSDate().timeIntervalSince1970))
-//        let comment = inputContainerView.inputTextField.text!
-//        
-//        let ref = FIRDatabase.database().reference().child("comments").childByAutoId()
-//        ref.child("initial").setValue(["date": date, "comment": comment, "username": username])
-//        ref.child("comments").child(date).setValue(["username": username, "comment": comment])
-//        
-//        let value = ["title": track.title, "artist": track.artist, "imageURL": track.imageUrl, "previewURL": track.previewUrl, "donor": username, "comment_reference": ref.key]
-//        
-//        for row in selectedRows {
-//            
-//            if let uid = fansData[row].uid {
-//                
-//                FIRDatabase.database().reference().child("users_by_id/\(uid)/received").child(date).setValue(value)
-//            }
-//        }
-//        
-//        FIRDatabase.database().reference().child("users_by_id/\(currentUserUid)/sent").child(date).setValue(value)
-//        FIRDatabase.database().reference().child("users_by_id/\(currentUserUid)/received").child(date).setValue(value)
-//        
-//        
-//        navigationController?.popViewControllerAnimated(true)
-//    }
-    
+
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         

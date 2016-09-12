@@ -10,12 +10,15 @@ import UIKit
 
 class UserHeader: UIView {
     
+    
     let pictureView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         let image = UIImage(named: "default_profile")
         imageView.image = image
-        imageView.contentMode = .ScaleAspectFit
+        imageView.contentMode = .ScaleAspectFill
+        imageView.layer.cornerRadius = 39
+        imageView.clipsToBounds = true
         return imageView
     }()
     
@@ -92,7 +95,8 @@ class UserHeader: UIView {
         segmentControl.topAnchor.constraintEqualToAnchor(pictureView.bottomAnchor, constant: 16).active = true
         segmentControl.widthAnchor.constraintEqualToAnchor(widthAnchor, constant: -8).active = true
         
-        followButton.centerYAnchor.constraintEqualToAnchor(pictureView.centerYAnchor, constant: 0).active = true
+//        followButton.centerYAnchor.constraintEqualToAnchor(pictureView.centerYAnchor, constant: 0).active = true
+        followButton.topAnchor.constraintEqualToAnchor(pictureView.topAnchor).active = true
         followButton.rightAnchor.constraintEqualToAnchor(rightAnchor, constant: -16).active = true
         followButton.widthAnchor.constraintEqualToConstant(100).active = true
         

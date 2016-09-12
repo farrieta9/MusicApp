@@ -18,6 +18,22 @@ class RegisterController: UIViewController {
         return view
     }()
     
+    let indicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView()
+        indicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.WhiteLarge
+        indicator.clipsToBounds = true
+        indicator.color = UIColor.whiteColor()
+        indicator.layer.cornerRadius = 5
+        indicator.hidesWhenStopped = true
+        return indicator
+    }()
+    
+    let blackView: UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor(white: 0.5, alpha: 0.5)
+        return view
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor.rgb(100, green: 100, blue: 100)
@@ -53,9 +69,32 @@ class RegisterController: UIViewController {
             return
         }
         
+        if let window = UIApplication.sharedApplication().keyWindow {
+            blackView.backgroundColor = UIColor(white: 0, alpha: 0.5)
+            
+            blackView.addSubview(indicator)
+            window.addSubview(blackView)
+            blackView.frame = window.frame
+            blackView.alpha = 0
+            
+            indicator.frame = CGRectMake(0, 0, 100, 100)
+            indicator.center = window.center
+            indicator.startAnimating()
+            
+            UIView.animateWithDuration(0.4, animations: { 
+                self.blackView.alpha = 1
+            }, completion: { (true) in
+                self.createUserWithEmail(email, password: password, username: username)
+            })
+        }
+    }
+    
+    private func createUserWithEmail(email: String, password: String, username: String) {
         FIRAuth.auth()?.createUserWithEmail(email, password: password, completion: { (user, error) in
             if error != nil {
                 print(error)
+                self.indicator.stopAnimating()
+                self.blackView.removeFromSuperview()
                 self.displayAlert("Invalid email or password")
                 return
             } else {
@@ -68,20 +107,21 @@ class RegisterController: UIViewController {
                 let values = ["username": username, "email": email]
                 
                 FIRDatabase.database().reference().child("users").child(uid).updateChildValues(values, withCompletionBlock: { (error, ref) in
+                    self.indicator.stopAnimating()
+                    self.blackView.removeFromSuperview()
                     if error != nil {
                         print(error)
                     } else {
                         self.navigationController?.popViewControllerAnimated(true)
                     }
                 })
-                
-                
             }
         })
     }
     
     private func setUpView() {
         view.addSubview(registerView)
+        
         registerView.centerXAnchor.constraintEqualToAnchor(view.centerXAnchor).active = true
         registerView.centerYAnchor.constraintEqualToAnchor(view.centerYAnchor).active = true
         registerView.widthAnchor.constraintEqualToAnchor(view.widthAnchor).active = true

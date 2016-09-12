@@ -221,13 +221,12 @@ class UserController: UITableViewController {
         }, withCancelBlock: nil)
     }
     
-    
     func observePosts() {
         guard let uid = user?.uid else {
             return
         }
         
-        FIRDatabase.database().reference().child("users-sent").child(uid).observeEventType(.ChildAdded, withBlock: { (snapshot) in
+        FIRDatabase.database().reference().child("songs-sent").child(uid).observeEventType(.ChildAdded, withBlock: { (snapshot) in
             
             guard let result = snapshot.value as? [String: AnyObject] else {
                 return
