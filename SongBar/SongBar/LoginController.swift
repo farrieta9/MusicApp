@@ -19,6 +19,7 @@ class LoginController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.handleAutoSignIn()
         view.backgroundColor = UIColor.rgb(100, green: 100, blue: 100)
         
         self.navigationItem.title = "Login"
@@ -29,6 +30,12 @@ class LoginController: UIViewController {
         self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.whiteColor()]
         
         setUpView()
+    }
+    
+    func handleAutoSignIn() {
+        if FIRAuth.auth()?.currentUser?.uid != nil {
+            performSelector(#selector(self.showAppTabBarController), withObject: nil, afterDelay: 0)
+        }
     }
     
     func setUpView() {
@@ -66,9 +73,14 @@ class LoginController: UIViewController {
                 print(error?.userInfo)
                 return
             } else {
-                self.dismissViewControllerAnimated(true, completion: nil)
+                self.showAppTabBarController()
             }
         })
+    }
+    
+    func showAppTabBarController() {
+        let app = AppTabBarController()
+        self.presentViewController(app, animated: true, completion: nil)
     }
     
     func validateForm() -> Bool {
