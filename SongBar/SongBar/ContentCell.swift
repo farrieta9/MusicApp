@@ -15,7 +15,7 @@ class ContentCell: UITableViewCell {
             guard let user = user else {
                 return
             }
-            spotifyIconImageView.hidden = true
+//            spotifyIconImageView.hidden = true
             thumbnailImageView.layer.cornerRadius = 25
             textLabel?.text = user.username
             detailTextLabel?.text = user.email
@@ -34,7 +34,7 @@ class ContentCell: UITableViewCell {
                 return
             }
             thumbnailImageView.layer.cornerRadius = 0
-            spotifyIconImageView.hidden = false
+//            spotifyIconImageView.hidden = false
             textLabel?.text = track.title
             detailTextLabel?.text = track.artist
             thumbnailImageView.loadImageUsingURLString(track.imageUrl)
@@ -62,22 +62,22 @@ class ContentCell: UITableViewCell {
 		return imageView
 	}()
     
-    let spotifyIconImageView: UIImageView = {
-        let imageView = UIImageView()
-        let image = UIImage(named: "spotify_icon_cmyk_green")
-        imageView.image = image
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.contentMode = .ScaleAspectFit
-        imageView.clipsToBounds = true
-        return imageView
-    }()
+//    let spotifyIconImageView: UIImageView = {
+//        let imageView = UIImageView()
+//        let image = UIImage(named: "spotify_icon_cmyk_green")
+//        imageView.image = image
+//        imageView.translatesAutoresizingMaskIntoConstraints = false
+//        imageView.contentMode = .ScaleAspectFit
+//        imageView.clipsToBounds = true
+//        return imageView
+//    }()
     
 	
 	override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
 		super.init(style: .Subtitle, reuseIdentifier: reuseIdentifier)
 		
 		addSubview(thumbnailImageView)
-        addSubview(spotifyIconImageView)
+//        addSubview(spotifyIconImageView)
 		
 		// need x, y, width, height
 		thumbnailImageView.leftAnchor.constraintEqualToAnchor(leftAnchor, constant: 8).active = true
@@ -86,10 +86,10 @@ class ContentCell: UITableViewCell {
 		thumbnailImageView.heightAnchor.constraintEqualToConstant(50).active = true
         
 //        The Spotify icon should never be smaller than 21px in digital or 6mm in print.
-        spotifyIconImageView.rightAnchor.constraintEqualToAnchor(rightAnchor, constant: -8).active = true
-        spotifyIconImageView.bottomAnchor.constraintEqualToAnchor(bottomAnchor, constant: -8).active = true
-        spotifyIconImageView.widthAnchor.constraintEqualToConstant(23).active = true
-        spotifyIconImageView.heightAnchor.constraintEqualToConstant(23).active = true
+//        spotifyIconImageView.rightAnchor.constraintEqualToAnchor(rightAnchor, constant: -8).active = true
+//        spotifyIconImageView.bottomAnchor.constraintEqualToAnchor(bottomAnchor, constant: -8).active = true
+//        spotifyIconImageView.widthAnchor.constraintEqualToConstant(23).active = true
+//        spotifyIconImageView.heightAnchor.constraintEqualToConstant(23).active = true
         
         
 	}

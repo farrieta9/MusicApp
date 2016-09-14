@@ -19,7 +19,7 @@ class FeedCell: UICollectionViewCell {
             
             titleLabel.text = track.title
             subTitleLabel.text = track.artist
-            commentLabel.text = track.comment
+            commentButton.setTitle(track.comment, forState: .Normal)
             fetchDonorByUid(track.donor!)
             thumbnailImageView.loadImageUsingURLString(track.imageUrl)
         }
@@ -104,19 +104,26 @@ class FeedCell: UICollectionViewCell {
         label.font = UIFont.boldSystemFontOfSize(16)
 		return label
 	}()
-	
-	let commentLabel: UILabel = {
-		let label = UILabel()
-		label.text = "A really nice comment"
-		label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.systemFontOfSize(14)
-		return label
-	}()
+    
+    let commentButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("A really nice comment button", forState: .Normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitleColor(UIColor.blackColor(), forState: .Normal)
+        button.titleLabel?.font = UIFont.systemFontOfSize(14)
+        return button
+    }()
 	
 	override init(frame: CGRect) {
 		super.init(frame: frame)
 		setUpView()
+        
+        commentButton.addTarget(self, action: #selector(self.handleComment), forControlEvents: .TouchUpInside)
 	}
+    
+    func handleComment() {
+        print(123)
+    }
 	
 	func setUpView() {
 		addSubview(trackView)
@@ -155,7 +162,7 @@ class FeedCell: UICollectionViewCell {
 		
 		descriptionView.addSubview(userImageView)
 		descriptionView.addSubview(usernameLabel)
-		descriptionView.addSubview(commentLabel)
+		descriptionView.addSubview(commentButton)
 		
 		userImageView.leftAnchor.constraintEqualToAnchor(descriptionView.leftAnchor, constant: 8).active = true
 		userImageView.centerYAnchor.constraintEqualToAnchor(descriptionView.centerYAnchor).active = true
@@ -165,8 +172,8 @@ class FeedCell: UICollectionViewCell {
 		usernameLabel.topAnchor.constraintEqualToAnchor(userImageView.topAnchor, constant: 0).active = true
 		usernameLabel.leftAnchor.constraintEqualToAnchor(userImageView.rightAnchor, constant: 8).active = true
 		
-		commentLabel.centerYAnchor.constraintEqualToAnchor(userImageView.centerYAnchor, constant: 8).active = true
-		commentLabel.leftAnchor.constraintEqualToAnchor(userImageView.rightAnchor, constant: 8).active = true
+		commentButton.centerYAnchor.constraintEqualToAnchor(userImageView.centerYAnchor, constant: 8).active = true
+		commentButton.leftAnchor.constraintEqualToAnchor(userImageView.rightAnchor, constant: 8).active = true
 	}
 	
 	required init?(coder aDecoder: NSCoder) {

@@ -56,6 +56,7 @@ class UserHeader: UIView {
         button.layer.borderColor = UIColor.blackColor().CGColor
         button.layer.borderWidth = 1
         button.titleLabel?.font = UIFont.boldSystemFontOfSize(13)
+        button.hidden = true
         return button
     }()
     
@@ -95,7 +96,6 @@ class UserHeader: UIView {
         segmentControl.topAnchor.constraintEqualToAnchor(pictureView.bottomAnchor, constant: 16).active = true
         segmentControl.widthAnchor.constraintEqualToAnchor(widthAnchor, constant: -8).active = true
         
-//        followButton.centerYAnchor.constraintEqualToAnchor(pictureView.centerYAnchor, constant: 0).active = true
         followButton.topAnchor.constraintEqualToAnchor(pictureView.topAnchor).active = true
         followButton.rightAnchor.constraintEqualToAnchor(rightAnchor, constant: -16).active = true
         followButton.widthAnchor.constraintEqualToConstant(100).active = true

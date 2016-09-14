@@ -51,15 +51,15 @@ class AppTabBarController: UITabBarController {
         return label
     }()
     
-    let spotifyIconImageView: UIImageView = {
-        let imageView = UIImageView()
-        let image = UIImage(named: "spotify_icon_cmyk_green")
-        imageView.image = image
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.contentMode = .ScaleAspectFit
-        imageView.clipsToBounds = true
-        return imageView
-    }()
+//    let spotifyIconImageView: UIImageView = {
+//        let imageView = UIImageView()
+//        let image = UIImage(named: "spotify_icon_cmyk_green")
+//        imageView.image = image
+//        imageView.translatesAutoresizingMaskIntoConstraints = false
+//        imageView.contentMode = .ScaleAspectFit
+//        imageView.clipsToBounds = true
+//        return imageView
+//    }()
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -91,7 +91,7 @@ class AppTabBarController: UITabBarController {
         playerView.addSubview(stopButton)
         playerView.addSubview(titleLabel)
         playerView.addSubview(detailLabel)
-        playerView.addSubview(spotifyIconImageView)
+//        playerView.addSubview(spotifyIconImageView)
 		setUpContraints()
 	}
     
@@ -114,10 +114,10 @@ class AppTabBarController: UITabBarController {
         detailLabel.leftAnchor.constraintEqualToAnchor(playPauseButton.rightAnchor, constant: 8).active = true
         detailLabel.topAnchor.constraintEqualToAnchor(titleLabel.bottomAnchor, constant: 4).active = true
         
-        spotifyIconImageView.rightAnchor.constraintEqualToAnchor(stopButton.leftAnchor, constant: -4).active = true
-        spotifyIconImageView.bottomAnchor.constraintEqualToAnchor(playerView.bottomAnchor, constant: -4).active = true
-        spotifyIconImageView.widthAnchor.constraintEqualToConstant(21).active = true
-        spotifyIconImageView.heightAnchor.constraintEqualToConstant(21).active = true
+//        spotifyIconImageView.rightAnchor.constraintEqualToAnchor(stopButton.leftAnchor, constant: -4).active = true
+//        spotifyIconImageView.bottomAnchor.constraintEqualToAnchor(playerView.bottomAnchor, constant: -4).active = true
+//        spotifyIconImageView.widthAnchor.constraintEqualToConstant(21).active = true
+//        spotifyIconImageView.heightAnchor.constraintEqualToConstant(21).active = true
 	}
     
     private func setUpMusicPlayer() {

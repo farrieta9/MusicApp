@@ -16,6 +16,7 @@ class ShareController: UITableViewController {
     var timer: NSTimer? = nil
     var track: SpotifyTrack?
     var fansData: [User] = [User]()
+    var hidAudioPlayer: Bool?
     
     lazy var inputContainerView: InputContainerView = {
         let contentView = InputContainerView(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: 50))
@@ -83,13 +84,14 @@ class ShareController: UITableViewController {
         
         if MusicPlayer.playView?.hidden == false {
             MusicPlayer.playView?.hidden = true
+            hidAudioPlayer = true
         }
     }
     
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
         
-        if MusicPlayer.playView?.hidden == true {
+        if MusicPlayer.playView?.hidden == true && hidAudioPlayer == true {
             MusicPlayer.playView?.hidden = false
         }
     }

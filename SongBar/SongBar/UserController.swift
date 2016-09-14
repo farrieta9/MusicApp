@@ -43,6 +43,13 @@ class UserController: UITableViewController {
                 headerView.pictureView.loadImageUsingURLString(imageUrl)
             }
             
+//            headerView.followButton.hidden = true
+            if user.uid == FIRAuth.auth()?.currentUser?.uid {
+                headerView.followButton.hidden = true
+            } else {
+                headerView.followButton.hidden = false
+            }
+            
             observePosts()
             observeFollowing()
             observeFans()
@@ -143,7 +150,7 @@ class UserController: UITableViewController {
             return
         }
         
-        headerView.followButton.hidden = true
+//        headerView.followButton.hidden = true
         
         guard let uid = FIRAuth.auth()?.currentUser?.uid else {
             return
@@ -268,6 +275,13 @@ class UserController: UITableViewController {
         let navController = UINavigationController(rootViewController: loginController)
         presentViewController(navController, animated: true, completion: nil)
     }
+    
+    func showUserControllerForUser(user: User) {
+        let userController = UserController()
+        userController.user = user
+        userController.checkIfFollowing()
+        navigationController?.pushViewController(userController, animated: true)
+    }
 }
 
 extension UserController {
@@ -312,6 +326,20 @@ extension UserController {
     
     override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         return 70
+    }
+    
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        switch contentOption {
+        case .Posts:
+            MusicPlayer.playSong(postData[indexPath.row])
+            break
+        case .Fans:
+            showUserControllerForUser(fansData[indexPath.row])
+            break
+        case .Following:
+            showUserControllerForUser(followingData[indexPath.row])
+            break
+        }
     }
 }
 
