@@ -34,6 +34,9 @@
 		8CA16E811D83DDA200836E42 /* SpotifyApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CA16E801D83DDA200836E42 /* SpotifyApi.swift */; };
 		8CA16E831D84642E00836E42 /* SpotifyTrack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CA16E821D84642E00836E42 /* SpotifyTrack.swift */; };
 		8CA16E851D846D9600836E42 /* MusicPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CA16E841D846D9600836E42 /* MusicPlayer.swift */; };
+		8CAF0FCB1D8B7302000DE888 /* CommentController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CAF0FCA1D8B7302000DE888 /* CommentController.swift */; };
+		8CAF0FCD1D8B74D6000DE888 /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CAF0FCC1D8B74D6000DE888 /* Comment.swift */; };
+		8CAF0FCF1D8B7528000DE888 /* CommentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CAF0FCE1D8B7528000DE888 /* CommentCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -67,6 +70,9 @@
 		8CA16E801D83DDA200836E42 /* SpotifyApi.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpotifyApi.swift; sourceTree = "<group>"; };
 		8CA16E821D84642E00836E42 /* SpotifyTrack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpotifyTrack.swift; sourceTree = "<group>"; };
 		8CA16E841D846D9600836E42 /* MusicPlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicPlayer.swift; sourceTree = "<group>"; };
+		8CAF0FCA1D8B7302000DE888 /* CommentController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommentController.swift; sourceTree = "<group>"; };
+		8CAF0FCC1D8B74D6000DE888 /* Comment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
+		8CAF0FCE1D8B7528000DE888 /* CommentCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommentCell.swift; sourceTree = "<group>"; };
 		9AEB8E3EA73BE7A07A232218 /* Pods_SongBar.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SongBar.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -144,6 +150,7 @@
 				8C89A3F01D823F0A00BA827E /* RegisterController.swift */,
 				8C9E0A7C1D837A610067D862 /* SettingsController.swift */,
 				8C58587F1D84C679001861BA /* ShareController.swift */,
+				8CAF0FCA1D8B7302000DE888 /* CommentController.swift */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -159,6 +166,7 @@
 				8C89A3EE1D823F0100BA827E /* RegisterView.swift */,
 				8C9E0A7E1D837AEE0067D862 /* SettingsCell.swift */,
 				8C5858811D84C972001861BA /* InputContainerView.swift */,
+				8CAF0FCE1D8B7528000DE888 /* CommentCell.swift */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -179,6 +187,7 @@
 				8CA16E801D83DDA200836E42 /* SpotifyApi.swift */,
 				8CA16E821D84642E00836E42 /* SpotifyTrack.swift */,
 				8CA16E841D846D9600836E42 /* MusicPlayer.swift */,
+				8CAF0FCC1D8B74D6000DE888 /* Comment.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -219,6 +228,7 @@
 					8C402E631D7E360600314A87 = {
 						CreatedOnToolsVersion = 7.3;
 						DevelopmentTeam = F9J6KGE3KA;
+						LastSwiftMigration = 0800;
 					};
 				};
 			};
@@ -316,13 +326,16 @@
 				8C402E681D7E360600314A87 /* AppDelegate.swift in Sources */,
 				8C28B1C11D7E91B200661FE4 /* ContentCell.swift in Sources */,
 				8C28B1BB1D7E8B8D00661FE4 /* AppTabBarController.swift in Sources */,
+				8CAF0FCD1D8B74D6000DE888 /* Comment.swift in Sources */,
 				8C9E0A811D837BEE0067D862 /* Setting.swift in Sources */,
 				8C28B1BF1D7E8DAE00661FE4 /* SearchView.swift in Sources */,
+				8CAF0FCF1D8B7528000DE888 /* CommentCell.swift in Sources */,
 				8CA16E851D846D9600836E42 /* MusicPlayer.swift in Sources */,
 				8C9E0A7D1D837A610067D862 /* SettingsController.swift in Sources */,
 				8C89A3F41D8241D800BA827E /* User.swift in Sources */,
 				8C28B1BD1D7E8BA100661FE4 /* UserController.swift in Sources */,
 				8C5858801D84C679001861BA /* ShareController.swift in Sources */,
+				8CAF0FCB1D8B7302000DE888 /* CommentController.swift in Sources */,
 				8C4FFAB41D7E573900477B36 /* FeedCell.swift in Sources */,
 				8C89A3F11D823F0A00BA827E /* RegisterController.swift in Sources */,
 				8CA16E831D84642E00836E42 /* SpotifyTrack.swift in Sources */,
@@ -441,6 +454,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.lil9porkchop.SongBar;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -454,6 +468,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.lil9porkchop.SongBar;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};

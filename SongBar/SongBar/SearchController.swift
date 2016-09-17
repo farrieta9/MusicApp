@@ -13,7 +13,7 @@ class SearchController: UIViewController {
 
     let indicator: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView()
-        indicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.WhiteLarge
+        indicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.whiteLarge
         indicator.clipsToBounds = true
         indicator.color = UIColor(white: 0.3, alpha: 0.9)
         indicator.layer.cornerRadius = 5
@@ -25,17 +25,17 @@ class SearchController: UIViewController {
     var peopleData = [User]()
     var musicData = [SpotifyTrack]()
     enum SearchContentType {
-        case Music
-        case People
+        case music
+        case people
     }
-    var searchContent: SearchContentType = .Music
+    var searchContent: SearchContentType = .music
 	
-	private let cellId = "cellId"
-    var timer: NSTimer? = nil
+	fileprivate let cellId = "cellId"
+    var timer: Timer? = nil
 	let searchView: SearchView = {
 		let sv = SearchView()
 		sv.translatesAutoresizingMaskIntoConstraints = false
-		sv.backgroundColor = UIColor.whiteColor()
+		sv.backgroundColor = UIColor.white
 		return sv
 	}()
     
@@ -52,31 +52,31 @@ class SearchController: UIViewController {
         
         searchBar.delegate = self
         
-		searchView.centerXAnchor.constraintEqualToAnchor(view.centerXAnchor).active = true
-		searchView.centerYAnchor.constraintEqualToAnchor(view.centerYAnchor).active = true
-		searchView.widthAnchor.constraintEqualToAnchor(view.widthAnchor).active = true
-		searchView.heightAnchor.constraintEqualToAnchor(view.heightAnchor).active = true
+		searchView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+		searchView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+		searchView.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
+		searchView.heightAnchor.constraint(equalTo: view.heightAnchor).isActive = true
         
-        indicator.centerXAnchor.constraintEqualToAnchor(view.centerXAnchor).active = true
-        indicator.centerYAnchor.constraintEqualToAnchor(view.centerYAnchor).active = true
-        indicator.widthAnchor.constraintEqualToConstant(50).active = true
-        indicator.heightAnchor.constraintEqualToConstant(50).active = true
+        indicator.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        indicator.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        indicator.widthAnchor.constraint(equalToConstant: 50).isActive = true
+        indicator.heightAnchor.constraint(equalToConstant: 50).isActive = true
 		
-		searchView.tableView.registerClass(ContentCell.self, forCellReuseIdentifier: cellId)
+		searchView.tableView.register(ContentCell.self, forCellReuseIdentifier: cellId)
 		
 		searchView.tableView.dataSource = self
 		searchView.tableView.delegate = self
         searchView.tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 250, right: 0)
         
-        searchView.segmentControl.addTarget(self, action: #selector(handleSegmentControl), forControlEvents: .ValueChanged)
+        searchView.segmentControl.addTarget(self, action: #selector(handleSegmentControl), for: .valueChanged)
 	}
     
     func handleSegmentControl() {
         switch searchView.segmentControl.selectedSegmentIndex {
         case 0:
-            searchContent = .Music
+            searchContent = .music
         case 1:
-            searchContent = .People
+            searchContent = .people
         default:
             break
         }
@@ -88,15 +88,15 @@ class SearchController: UIViewController {
         let bar = UISearchBar()
         bar.showsCancelButton = false
         bar.placeholder = "Search here..."
-        bar.autocorrectionType = .No
-        bar.autocapitalizationType = .None
-        bar.returnKeyType = .Done
+        bar.autocorrectionType = .no
+        bar.autocapitalizationType = .none
+        bar.returnKeyType = .done
         return bar
     }()
     
-    func searchBarTextDidPause(timer: NSTimer) {
+    func searchBarTextDidPause(_ timer: Timer) {
         // Custom method
-        guard let text = searchBar.text?.lowercaseString else {
+        guard let text = searchBar.text?.lowercased() else {
             print("searchBarTextDidPause() failed")
             return
         }
@@ -107,20 +107,20 @@ class SearchController: UIViewController {
         }
 
         switch searchContent {
-        case .Music:
+        case .music:
             searchForMusic(text)
-        case .People:
+        case .people:
             searchForPeople(text)
         }
     }
     
-    private func searchForPeople(searchText: String) {
+    fileprivate func searchForPeople(_ searchText: String) {
         
         guard let uid = FIRAuth.auth()?.currentUser?.uid else {
             return
         }
         
-        FIRDatabase.database().reference().child("users").queryOrderedByChild("username").queryStartingAtValue(searchText).observeSingleEventOfType(.Value, withBlock: { (snapshot) in
+        FIRDatabase.database().reference().child("users").queryOrdered(byChild: "username").queryStarting(atValue: searchText).observeSingleEvent(of: .value, with: { (snapshot) in
             
             self.peopleData.removeAll()
             
@@ -144,23 +144,23 @@ class SearchController: UIViewController {
                 }
             }
             
-        }, withCancelBlock: nil)
+        }, withCancel: nil)
     }
     
-    func showUserControllerForUser(user: User) {
+    func showUserControllerForUser(_ user: User) {
         let userController = UserController()
         userController.user = user
         userController.checkIfFollowing()
         navigationController?.pushViewController(userController, animated: true)
     }
     
-    private func attemptReloadTable() {
+    fileprivate func attemptReloadTable() {
         self.timer?.invalidate()
-        self.timer = NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: #selector(self.handleReloadTable), userInfo: nil, repeats: false)
+        self.timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(self.handleReloadTable), userInfo: nil, repeats: false)
     }
     
     func handleReloadTable() {
-        dispatch_async(dispatch_get_main_queue()) { 
+        DispatchQueue.main.async { 
             self.searchView.tableView.reloadData()
             self.indicator.stopAnimating()
         }
@@ -173,55 +173,55 @@ class SearchController: UIViewController {
 }
 
 extension SearchController: UITableViewDataSource {
-	func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+	func numberOfSections(in tableView: UITableView) -> Int {
 		return 1
 	}
 	
-	func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch searchContent {
-        case .Music:
+        case .music:
             return musicData.count
-        case .People:
+        case .people:
             return peopleData.count
         }
 	}
 	
-	func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-		let cell = tableView.dequeueReusableCellWithIdentifier(cellId, forIndexPath: indexPath) as! ContentCell
+	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+		let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! ContentCell
 		cell.detailTextLabel?.text = "Some detail"
 		cell.textLabel?.text = "Some fancy text"
         
         switch searchContent {
-        case .Music:
-            cell.track = musicData[indexPath.row]
-        case .People:
-            cell.user = peopleData[indexPath.row]
+        case .music:
+            cell.track = musicData[(indexPath as NSIndexPath).row]
+        case .people:
+            cell.user = peopleData[(indexPath as NSIndexPath).row]
         }
         
 		return cell
 	}
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         searchBar.resignFirstResponder()
         switch searchContent {
-        case .Music:
-            showShareControllerWithTrack(musicData[indexPath.row])
-        case .People:
-            let selectedUser = peopleData[indexPath.row]
+        case .music:
+            showShareControllerWithTrack(musicData[(indexPath as NSIndexPath).row])
+        case .people:
+            let selectedUser = peopleData[(indexPath as NSIndexPath).row]
             showUserControllerForUser(selectedUser)
         }
     }
     
-    func searchForMusic(searchText: String) {
+    func searchForMusic(_ searchText: String) {
         SpotifyApi.search(searchText) {
-            (tracks) in dispatch_async(dispatch_get_main_queue()) {
+            (tracks) in DispatchQueue.main.async {
                 self.musicData = tracks
                 self.attemptReloadTable()
             }
         }
     }
     
-    func showShareControllerWithTrack(track: SpotifyTrack) {
+    func showShareControllerWithTrack(_ track: SpotifyTrack) {
         let shareController = ShareController()
         shareController.track = track
         navigationController?.pushViewController(shareController, animated: true)
@@ -229,58 +229,58 @@ extension SearchController: UITableViewDataSource {
 }
 
 extension SearchController: UITableViewDelegate {
-	func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+	func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 		return 72
 	}
     
-    func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
+    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         let playAction = UITableViewRowAction()
         
         return [playAction]
     }
     
-    func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         // you need to implement this method too or you can't swipe to display the actions
     }
     
-    func tableView(tableView: UITableView, willBeginEditingRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, willBeginEditingRowAt indexPath: IndexPath) {
         switch searchContent {
-        case .Music:
-            MusicPlayer.playSong(musicData[indexPath.row])
+        case .music:
+            MusicPlayer.playSong(musicData[(indexPath as NSIndexPath).row])
             self.searchBar.resignFirstResponder()
         default:
             return
         }
     }
     
-    func scrollViewWillBeginDragging(scrollView: UIScrollView) {
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         searchBar.resignFirstResponder()
     }
 }
 
 extension SearchController: UISearchBarDelegate {
-    func searchBar(searchBar: UISearchBar, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
+    func searchBar(_ searchBar: UISearchBar, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         indicator.startAnimating()
         
         timer?.invalidate()
-        timer = NSTimer.scheduledTimerWithTimeInterval(0.75, target: self, selector: #selector(self.searchBarTextDidPause(_:)), userInfo: searchBar.text, repeats: false)
+        timer = Timer.scheduledTimer(timeInterval: 0.75, target: self, selector: #selector(self.searchBarTextDidPause(_:)), userInfo: searchBar.text, repeats: false)
         
         return true
     }
     
-    func searchBarShouldBeginEditing(searchBar: UISearchBar) -> Bool {
+    func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
         searchBar.showsCancelButton = true
         return true
     }
     
-    func searchBarCancelButtonClicked(searchBar: UISearchBar) {
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
         searchBar.showsCancelButton = false
         searchBar.text = ""
         clearTable()
     }
     
-    func searchBarSearchButtonClicked(searchBar: UISearchBar) {
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
         searchBar.showsCancelButton = false
     }

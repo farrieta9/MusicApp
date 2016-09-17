@@ -11,29 +11,29 @@ import AVFoundation
 import UIKit
 
 enum MusicStatus {
-    case Play
-    case Pause
+    case play
+    case pause
 }
 
 class MusicPlayer {
     
     static var audioPlay: AVPlayer!
-    static var musicStatus: MusicStatus = .Pause
+    static var musicStatus: MusicStatus = .pause
     static var playView: UIView?
     static var titleLabel: UILabel?
     static var playButton: UIButton?
     static var detailLabel: UILabel?
     
-    static func playSong(track: SpotifyTrack) {
-        if let url = NSURL(string: track.previewUrl) {
-            audioPlay = AVPlayer(URL: url)
+    static func playSong(_ track: SpotifyTrack) {
+        if let url = URL(string: track.previewUrl) {
+            audioPlay = AVPlayer(url: url)
             audioPlay.play()
-            musicStatus = .Play
-            playView?.hidden = false
+            musicStatus = .play
+            playView?.isHidden = false
             titleLabel?.text = track.title
             detailLabel?.text = track.artist
             let image = UIImage(named: "pause")
-            playButton?.setImage(image, forState: .Normal)
+            playButton?.setImage(image, for: UIControlState())
         }
     }
     

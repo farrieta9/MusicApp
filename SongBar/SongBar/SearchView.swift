@@ -26,8 +26,8 @@ class SearchView: UIView {
 	let segmentControl: UISegmentedControl = {
 		let seg = UISegmentedControl()
 		seg.translatesAutoresizingMaskIntoConstraints = false
-		seg.insertSegmentWithTitle("Music", atIndex: 0, animated: true)
-		seg.insertSegmentWithTitle("People", atIndex: 1, animated: true)
+		seg.insertSegment(withTitle: "Music", at: 0, animated: true)
+		seg.insertSegment(withTitle: "People", at: 1, animated: true)
         seg.selectedSegmentIndex = 0
 		return seg
 	}()
@@ -42,20 +42,20 @@ class SearchView: UIView {
 		addSubview(segmentControl)
 		addSubview(tableView)
         addSubview(separatorView)
-		segmentControl.topAnchor.constraintEqualToAnchor(topAnchor, constant: 68).active = true
-		segmentControl.widthAnchor.constraintEqualToAnchor(widthAnchor, constant: -8).active = true
-		segmentControl.heightAnchor.constraintEqualToConstant(32).active = true
-		segmentControl.centerXAnchor.constraintEqualToAnchor(centerXAnchor, constant: 0).active = true
+		segmentControl.topAnchor.constraint(equalTo: topAnchor, constant: 68).isActive = true
+		segmentControl.widthAnchor.constraint(equalTo: widthAnchor, constant: -8).isActive = true
+		segmentControl.heightAnchor.constraint(equalToConstant: 32).isActive = true
+		segmentControl.centerXAnchor.constraint(equalTo: centerXAnchor, constant: 0).isActive = true
 		
-		tableView.centerXAnchor.constraintEqualToAnchor(centerXAnchor).active = true
-		tableView.topAnchor.constraintEqualToAnchor(segmentControl.bottomAnchor, constant: 8).active = true
-		tableView.widthAnchor.constraintEqualToAnchor(widthAnchor).active = true
-		tableView.heightAnchor.constraintEqualToAnchor(heightAnchor).active = true
+		tableView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+		tableView.topAnchor.constraint(equalTo: segmentControl.bottomAnchor, constant: 8).isActive = true
+		tableView.widthAnchor.constraint(equalTo: widthAnchor).isActive = true
+		tableView.heightAnchor.constraint(equalTo: heightAnchor).isActive = true
         
-        separatorView.centerXAnchor.constraintEqualToAnchor(centerXAnchor).active = true
-        separatorView.widthAnchor.constraintEqualToAnchor(widthAnchor).active = true
-        separatorView.heightAnchor.constraintEqualToConstant(1).active = true
-        separatorView.topAnchor.constraintEqualToAnchor(segmentControl.bottomAnchor, constant: 4).active = true
+        separatorView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+        separatorView.widthAnchor.constraint(equalTo: widthAnchor).isActive = true
+        separatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        separatorView.topAnchor.constraint(equalTo: segmentControl.bottomAnchor, constant: 4).isActive = true
 	}
 	
 	required init?(coder aDecoder: NSCoder) {

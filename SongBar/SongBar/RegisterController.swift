@@ -20,9 +20,9 @@ class RegisterController: UIViewController {
     
     let indicator: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView()
-        indicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.WhiteLarge
+        indicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.whiteLarge
         indicator.clipsToBounds = true
-        indicator.color = UIColor.whiteColor()
+        indicator.color = UIColor.white
         indicator.layer.cornerRadius = 5
         indicator.hidesWhenStopped = true
         return indicator
@@ -42,7 +42,7 @@ class RegisterController: UIViewController {
     }
     
     func validateForm() -> Bool {
-        guard let email = registerView.emailTextField.text, password = registerView.passwordTextField.text, username = registerView.usernameTextField.text else {
+        guard let email = registerView.emailTextField.text, let password = registerView.passwordTextField.text, let username = registerView.usernameTextField.text else {
             return false
         }
         
@@ -61,7 +61,7 @@ class RegisterController: UIViewController {
     
     func handleSignUpButton() {
         
-        guard let email = registerView.emailTextField.text, password = registerView.passwordTextField.text?.lowercaseString, username = registerView.usernameTextField.text?.lowercaseString else {
+        guard let email = registerView.emailTextField.text, let password = registerView.passwordTextField.text?.lowercased(), let username = registerView.usernameTextField.text?.lowercased() else {
             return
         }
         
@@ -69,7 +69,7 @@ class RegisterController: UIViewController {
             return
         }
         
-        if let window = UIApplication.sharedApplication().keyWindow {
+        if let window = UIApplication.shared.keyWindow {
             blackView.backgroundColor = UIColor(white: 0, alpha: 0.5)
             
             blackView.addSubview(indicator)
@@ -77,11 +77,11 @@ class RegisterController: UIViewController {
             blackView.frame = window.frame
             blackView.alpha = 0
             
-            indicator.frame = CGRectMake(0, 0, 100, 100)
+            indicator.frame = CGRect(x: 0, y: 0, width: 100, height: 100)
             indicator.center = window.center
             indicator.startAnimating()
             
-            UIView.animateWithDuration(0.4, animations: { 
+            UIView.animate(withDuration: 0.4, animations: { 
                 self.blackView.alpha = 1
             }, completion: { (true) in
                 self.createUserWithEmail(email, password: password, username: username)
@@ -89,8 +89,8 @@ class RegisterController: UIViewController {
         }
     }
     
-    private func createUserWithEmail(email: String, password: String, username: String) {
-        FIRAuth.auth()?.createUserWithEmail(email, password: password, completion: { (user, error) in
+    fileprivate func createUserWithEmail(_ email: String, password: String, username: String) {
+        FIRAuth.auth()?.createUser(withEmail: email, password: password, completion: { (user, error) in
             if error != nil {
                 print(error)
                 self.indicator.stopAnimating()
@@ -112,38 +112,38 @@ class RegisterController: UIViewController {
                     if error != nil {
                         print(error)
                     } else {
-                        self.navigationController?.popViewControllerAnimated(true)
+                        self.navigationController?.popViewController(animated: true)
                     }
                 })
             }
         })
     }
     
-    private func setUpView() {
+    fileprivate func setUpView() {
         view.addSubview(registerView)
         
-        registerView.centerXAnchor.constraintEqualToAnchor(view.centerXAnchor).active = true
-        registerView.centerYAnchor.constraintEqualToAnchor(view.centerYAnchor).active = true
-        registerView.widthAnchor.constraintEqualToAnchor(view.widthAnchor).active = true
-        registerView.heightAnchor.constraintEqualToAnchor(view.heightAnchor).active = true
+        registerView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        registerView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        registerView.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
+        registerView.heightAnchor.constraint(equalTo: view.heightAnchor).isActive = true
         
         registerView.emailTextField.delegate = self
         registerView.passwordTextField.delegate = self
         registerView.usernameTextField.delegate = self
-        registerView.registerButton.addTarget(self, action: #selector(handleSignUpButton), forControlEvents: .TouchUpInside)
+        registerView.registerButton.addTarget(self, action: #selector(handleSignUpButton), for: .touchUpInside)
     }
     
-    private func displayAlert(message: String) {
-        let alertController = UIAlertController(title: "Invalid", message: message, preferredStyle: .Alert)
+    fileprivate func displayAlert(_ message: String) {
+        let alertController = UIAlertController(title: "Invalid", message: message, preferredStyle: .alert)
         
-        let defaultAction = UIAlertAction(title: "OK", style: .Default, handler: nil)
+        let defaultAction = UIAlertAction(title: "OK", style: .default, handler: nil)
         alertController.addAction(defaultAction)
-        presentViewController(alertController, animated: true, completion: nil)
+        present(alertController, animated: true, completion: nil)
     }
 }
 
 extension RegisterController: UITextFieldDelegate {
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
     }

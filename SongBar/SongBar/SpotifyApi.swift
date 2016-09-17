@@ -12,18 +12,18 @@ class SpotifyApi {
     
     static let spotifyBaseAPI = "https://api.spotify.com/v1/search?&type=track&limit=20&q="
     
-    static func search(query: String, completion: (tracks: [SpotifyTrack]) -> Void) {
+    static func search(_ query: String, completion: @escaping (_ tracks: [SpotifyTrack]) -> Void) {
         //        print("You entered: " + query)
         
         
-        guard let escapedQuery = query.stringByAddingPercentEncodingWithAllowedCharacters(
-            .URLHostAllowedCharacterSet()),
-            let url = NSURL(string: spotifyBaseAPI + escapedQuery)
+        guard let escapedQuery = query.addingPercentEncoding(
+            withAllowedCharacters: .urlHostAllowed()),
+            let url = URL(string: spotifyBaseAPI + escapedQuery)
             else {
                 return
         }
         
-        let task = NSURLSession.sharedSession().dataTaskWithURL(url) {
+        let task = URLSession.shared.dataTask(with: url, completionHandler: {
             (data, response, error) in
             
             if error != nil {
@@ -33,7 +33,7 @@ class SpotifyApi {
             
             var json: [String: AnyObject]
             do {
-                json = try NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.MutableContainers) as! [String : AnyObject]
+                json = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.mutableContainers) as! [String : AnyObject]
             } catch {
                 return
             }
@@ -41,11 +41,11 @@ class SpotifyApi {
             let tracks = parseTracksFrom(json)
             
             completion(tracks: tracks)
-        }
+        }) 
         task.resume()
     }
     
-    static func parseTracksFrom(json: [String: AnyObject]) -> [SpotifyTrack] {
+    static func parseTracksFrom(_ json: [String: AnyObject]) -> [SpotifyTrack] {
         var tracks = [SpotifyTrack]()
         guard let jsonTracks = json["tracks"] as? [String: AnyObject],
             let jsonItems = jsonTracks["items"] as? [[String: AnyObject]]

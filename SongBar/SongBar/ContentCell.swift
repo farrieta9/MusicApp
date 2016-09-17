@@ -44,19 +44,19 @@ class ContentCell: UITableViewCell {
 	override func layoutSubviews() {
 		super.layoutSubviews()
         self.preservesSuperviewLayoutMargins = false
-        self.separatorInset = UIEdgeInsetsZero
-        self.layoutMargins = UIEdgeInsetsZero
+        self.separatorInset = UIEdgeInsets.zero
+        self.layoutMargins = UIEdgeInsets.zero
 		
-		textLabel?.frame = CGRectMake(thumbnailImageView.frame.width + 16, textLabel!.frame.origin.y, textLabel!.frame.width, textLabel!.frame.height)
+		textLabel?.frame = CGRect(x: thumbnailImageView.frame.width + 16, y: textLabel!.frame.origin.y, width: textLabel!.frame.width, height: textLabel!.frame.height)
 		
-		detailTextLabel?.frame = CGRectMake(thumbnailImageView.frame.width + 16, detailTextLabel!.frame.origin.y, detailTextLabel!.frame.width, detailTextLabel!.frame.height)
+		detailTextLabel?.frame = CGRect(x: thumbnailImageView.frame.width + 16, y: detailTextLabel!.frame.origin.y, width: detailTextLabel!.frame.width, height: detailTextLabel!.frame.height)
 	}
 
 	let thumbnailImageView: UIImageView = {
 		let imageView = UIImageView()
 		imageView.image = UIImage(named: "default_profile.png")
 		imageView.translatesAutoresizingMaskIntoConstraints = false
-		imageView.contentMode = .ScaleAspectFill
+		imageView.contentMode = .scaleAspectFill
 		imageView.layer.cornerRadius = 25
         imageView.clipsToBounds = true
 		return imageView
@@ -74,16 +74,16 @@ class ContentCell: UITableViewCell {
     
 	
 	override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
-		super.init(style: .Subtitle, reuseIdentifier: reuseIdentifier)
+		super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
 		
 		addSubview(thumbnailImageView)
 //        addSubview(spotifyIconImageView)
 		
 		// need x, y, width, height
-		thumbnailImageView.leftAnchor.constraintEqualToAnchor(leftAnchor, constant: 8).active = true
-		thumbnailImageView.centerYAnchor.constraintEqualToAnchor(centerYAnchor).active = true
-		thumbnailImageView.widthAnchor.constraintEqualToConstant(50).active = true
-		thumbnailImageView.heightAnchor.constraintEqualToConstant(50).active = true
+		thumbnailImageView.leftAnchor.constraint(equalTo: leftAnchor, constant: 8).isActive = true
+		thumbnailImageView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+		thumbnailImageView.widthAnchor.constraint(equalToConstant: 50).isActive = true
+		thumbnailImageView.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
 //        The Spotify icon should never be smaller than 21px in digital or 6mm in print.
 //        spotifyIconImageView.rightAnchor.constraintEqualToAnchor(rightAnchor, constant: -8).active = true

@@ -17,6 +17,7 @@ class SpotifyTrack: NSObject {
     var timestamp: NSNumber?
     var comment: String?
     var donor: String?
+    var commentReference: String?
     
     override init() {}
     

@@ -17,19 +17,19 @@ class SettingsCell: UICollectionViewCell {
         return view
     }()
     
-    override var highlighted: Bool {
+    override var isHighlighted: Bool {
         didSet {
-            backgroundColor = highlighted ? UIColor.darkGrayColor() : UIColor.whiteColor()
-            nameLabel.textColor = highlighted ? UIColor.whiteColor() : UIColor.blackColor()
+            backgroundColor = isHighlighted ? UIColor.darkGray : UIColor.white
+            nameLabel.textColor = isHighlighted ? UIColor.white : UIColor.black
         }
     }
     
     let nameLabel: UILabel = {
         let label = UILabel()
         label.text = "Settings"
-        label.textAlignment = .Center
+        label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.systemFontOfSize(16)
+        label.font = UIFont.systemFont(ofSize: 16)
         return label
     }()
     
@@ -48,13 +48,13 @@ class SettingsCell: UICollectionViewCell {
     func setUpView() {
         addSubview(nameLabel)
         addSubview(separatorView)
-        nameLabel.centerXAnchor.constraintEqualToAnchor(centerXAnchor).active = true
-        nameLabel.centerYAnchor.constraintEqualToAnchor(centerYAnchor).active = true
+        nameLabel.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+        nameLabel.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
         
-        separatorView.centerXAnchor.constraintEqualToAnchor(centerXAnchor).active = true
-        separatorView.widthAnchor.constraintEqualToAnchor(widthAnchor).active = true
-        separatorView.topAnchor.constraintEqualToAnchor(bottomAnchor).active = true
-        separatorView.heightAnchor.constraintEqualToConstant(1).active = true
+        separatorView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+        separatorView.widthAnchor.constraint(equalTo: widthAnchor).isActive = true
+        separatorView.topAnchor.constraint(equalTo: bottomAnchor).isActive = true
+        separatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
     }
     
     required init?(coder aDecoder: NSCoder) {

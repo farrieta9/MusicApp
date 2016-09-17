@@ -17,18 +17,18 @@ class UserController: UITableViewController {
         return launcher
     }()
     
-    var timer: NSTimer? = nil
+    var timer: Timer? = nil
     var followingData = [User]()
     var fansData = [User]()
     var postData = [SpotifyTrack]()
     
     enum ContentOptions {
-        case Posts, Fans, Following
+        case posts, fans, following
     }
     
-    var contentOption: ContentOptions = .Posts
+    var contentOption: ContentOptions = .posts
 	
-    private let cellId = "cellId"
+    fileprivate let cellId = "cellId"
     
     var user: User? {
         didSet {
@@ -45,9 +45,9 @@ class UserController: UITableViewController {
             
 //            headerView.followButton.hidden = true
             if user.uid == FIRAuth.auth()?.currentUser?.uid {
-                headerView.followButton.hidden = true
+                headerView.followButton.isHidden = true
             } else {
-                headerView.followButton.hidden = false
+                headerView.followButton.isHidden = false
             }
             
             observePosts()
@@ -67,12 +67,12 @@ class UserController: UITableViewController {
 		super.viewDidLoad()
         
         tableView.tableHeaderView = headerView
-        tableView.registerClass(ContentCell.self, forCellReuseIdentifier: cellId)
+        tableView.register(ContentCell.self, forCellReuseIdentifier: cellId)
         observeSignedInUser()
         
-        headerView.segmentControl.addTarget(self, action: #selector(self.handleSegmentControl), forControlEvents: .ValueChanged)
-        headerView.followButton.addTarget(self, action: #selector(self.handleFollowButton), forControlEvents: .TouchUpInside)
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "more"), style: .Plain, target: self, action: #selector(handleSettings))
+        headerView.segmentControl.addTarget(self, action: #selector(self.handleSegmentControl), for: .valueChanged)
+        headerView.followButton.addTarget(self, action: #selector(self.handleFollowButton), for: .touchUpInside)
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "more"), style: .plain, target: self, action: #selector(handleSettings))
 	}
 
     func handleFollowButton() {
@@ -88,37 +88,37 @@ class UserController: UITableViewController {
     }
     
     func checkIfFollowing() {
-        guard let uid = user?.uid, signedInUserUid = FIRAuth.auth()?.currentUser?.uid else {
+        guard let uid = user?.uid, let signedInUserUid = FIRAuth.auth()?.currentUser?.uid else {
             return
         }
 
-        FIRDatabase.database().reference().child("users-following").child(signedInUserUid).child(uid).observeSingleEventOfType(.Value, withBlock: { (snapshot) in
+        FIRDatabase.database().reference().child("users-following").child(signedInUserUid).child(uid).observeSingleEvent(of: .value, with: { (snapshot) in
             
             if snapshot.value is NSNull {
-                self.headerView.followButton.setTitle("+ Follow", forState: .Normal)
-                self.headerView.followButton.backgroundColor = UIColor.clearColor()
+                self.headerView.followButton.setTitle("+ Follow", for: UIControlState())
+                self.headerView.followButton.backgroundColor = UIColor.clear
             } else {
-                self.headerView.followButton.setTitle("Following", forState: .Normal)
+                self.headerView.followButton.setTitle("Following", for: UIControlState())
                 self.headerView.followButton.backgroundColor = UIColor.rgb(13, green: 159, blue: 224)
             }
             
-        }, withCancelBlock: nil)
+        }, withCancel: nil)
     }
     
-    private func followUser(user: User) {
+    fileprivate func followUser(_ user: User) {
         
-        guard let uid = user.uid, signedInUserUid = FIRAuth.auth()?.currentUser?.uid else {
+        guard let uid = user.uid, let signedInUserUid = FIRAuth.auth()?.currentUser?.uid else {
             return
         }
         
         FIRDatabase.database().reference().child("users-following").child(signedInUserUid).updateChildValues([uid: 1])
         FIRDatabase.database().reference().child("users-fans").child(uid).updateChildValues([signedInUserUid: 1])
         
-        headerView.followButton.setTitle("Following", forState: .Normal)
+        headerView.followButton.setTitle("Following", for: UIControlState())
         headerView.followButton.backgroundColor = UIColor.rgb(13, green: 159, blue: 224)
     }
     
-    func unFollowUser(user: User) {
+    func unFollowUser(_ user: User) {
         guard let uid = FIRAuth.auth()?.currentUser?.uid else {
             return
         }
@@ -126,18 +126,18 @@ class UserController: UITableViewController {
         FIRDatabase.database().reference().child("users-following").child(uid).child(user.uid!).removeValue()
         FIRDatabase.database().reference().child("users-fans").child(user.uid!).child(uid).removeValue()
         
-        headerView.followButton.setTitle("+ Follow", forState: .Normal)
-        headerView.followButton.backgroundColor = UIColor.clearColor()
+        headerView.followButton.setTitle("+ Follow", for: UIControlState())
+        headerView.followButton.backgroundColor = UIColor.clear
     }
     
     func handleSegmentControl() {
         switch headerView.segmentControl.selectedSegmentIndex {
         case 0:
-            contentOption = .Posts
+            contentOption = .posts
         case 1:
-            contentOption = .Fans
+            contentOption = .fans
         case 2:
-            contentOption = .Following
+            contentOption = .following
         default:
             break
         }
@@ -145,7 +145,7 @@ class UserController: UITableViewController {
         attemptReloadTable()
     }
     
-    private func observeSignedInUser() {
+    fileprivate func observeSignedInUser() {
         if user != nil {
             return
         }
@@ -156,19 +156,19 @@ class UserController: UITableViewController {
             return
         }
         
-        FIRDatabase.database().reference().child("users").child(uid).observeEventType(.Value, withBlock: { (snapshot) in
+        FIRDatabase.database().reference().child("users").child(uid).observe(.value, with: { (snapshot) in
             
             guard let result = snapshot.value as? [String: AnyObject] else {
                 return
             }
             
             let user = User()
-            user.setValuesForKeysWithDictionary(result)
+            user.setValuesForKeys(result)
             user.uid = snapshot.key
             
             self.user = user
             
-        }, withCancelBlock: nil)
+        }, withCancel: nil)
     }
     
     func observeFollowing() {
@@ -177,9 +177,9 @@ class UserController: UITableViewController {
             return
         }
         
-        FIRDatabase.database().reference().child("users-following").child(uid).observeEventType(.ChildAdded, withBlock: { (snapshot) in
+        FIRDatabase.database().reference().child("users-following").child(uid).observe(.childAdded, with: { (snapshot) in
             
-            FIRDatabase.database().reference().child("users").child(snapshot.key).observeSingleEventOfType(.Value, withBlock: { (snapshot) in
+            FIRDatabase.database().reference().child("users").child(snapshot.key).observeSingleEvent(of: .value, with: { (snapshot) in
                 
                 guard let result = snapshot.value as? [String: AnyObject] else {
                     return
@@ -187,7 +187,7 @@ class UserController: UITableViewController {
                 
                 let user = User()
                 user.uid = snapshot.key
-                user.setValuesForKeysWithDictionary(result)
+                user.setValuesForKeys(result)
                 
                 if let imageUrl = result["imageUrl"] as? String {
                     user.imageUrl = imageUrl
@@ -196,8 +196,8 @@ class UserController: UITableViewController {
                 self.followingData.append(user)
                 self.attemptReloadTable()
                 
-            }, withCancelBlock: nil)
-        }, withCancelBlock: nil)
+            }, withCancel: nil)
+        }, withCancel: nil)
     }
     
     func observeFans() {
@@ -205,9 +205,9 @@ class UserController: UITableViewController {
             return
         }
         
-        FIRDatabase.database().reference().child("users-fans").child(uid).observeEventType(.ChildAdded, withBlock: { (snapshot) in
+        FIRDatabase.database().reference().child("users-fans").child(uid).observe(.childAdded, with: { (snapshot) in
             
-            FIRDatabase.database().reference().child("users").child(snapshot.key).observeSingleEventOfType(.Value, withBlock: { (snapshot) in
+            FIRDatabase.database().reference().child("users").child(snapshot.key).observeSingleEvent(of: .value, with: { (snapshot) in
                 
                 guard let result = snapshot.value as? [String: AnyObject] else {
                     return
@@ -215,7 +215,7 @@ class UserController: UITableViewController {
                 
                 let user = User()
                 user.uid = snapshot.key
-                user.setValuesForKeysWithDictionary(result)
+                user.setValuesForKeys(result)
                 
                 if let imageUrl = result["imageUrl"] as? String {
                     user.imageUrl = imageUrl
@@ -224,8 +224,8 @@ class UserController: UITableViewController {
                 self.fansData.append(user)
                 self.attemptReloadTable()
                 
-                }, withCancelBlock: nil)
-        }, withCancelBlock: nil)
+                }, withCancel: nil)
+        }, withCancel: nil)
     }
     
     func observePosts() {
@@ -233,28 +233,28 @@ class UserController: UITableViewController {
             return
         }
         
-        FIRDatabase.database().reference().child("songs-sent").child(uid).observeEventType(.ChildAdded, withBlock: { (snapshot) in
+        FIRDatabase.database().reference().child("songs-sent").child(uid).observe(.childAdded, with: { (snapshot) in
             
             guard let result = snapshot.value as? [String: AnyObject] else {
                 return
             }
             
             let track = SpotifyTrack()
-            track.setValuesForKeysWithDictionary(result)
+            track.setValuesForKeys(result)
             
             self.postData.append(track)
             self.attemptReloadTable()
             
-        }, withCancelBlock: nil)
+        }, withCancel: nil)
     }
     
-    private func attemptReloadTable() {
+    fileprivate func attemptReloadTable() {
         self.timer?.invalidate()
-        self.timer = NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: #selector(self.handleReloadTable), userInfo: nil, repeats: false)
+        self.timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(self.handleReloadTable), userInfo: nil, repeats: false)
     }
     
     func handleReloadTable() {
-        dispatch_async(dispatch_get_main_queue()) {
+        DispatchQueue.main.async {
             self.tableView.reloadData()
         }
     }
@@ -273,10 +273,10 @@ class UserController: UITableViewController {
         
         let loginController = LoginController()
         let navController = UINavigationController(rootViewController: loginController)
-        presentViewController(navController, animated: true, completion: nil)
+        present(navController, animated: true, completion: nil)
     }
     
-    func showUserControllerForUser(user: User) {
+    func showUserControllerForUser(_ user: User) {
         let userController = UserController()
         userController.user = user
         userController.checkIfFollowing()
@@ -285,59 +285,59 @@ class UserController: UITableViewController {
 }
 
 extension UserController {
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch contentOption {
-        case .Posts:
+        case .posts:
             return postData.count
-        case .Fans:
+        case .fans:
             return fansData.count
-        case .Following:
+        case .following:
             return followingData.count
         }
     }
     
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier(cellId, forIndexPath: indexPath) as! ContentCell
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! ContentCell
         
         cell.thumbnailImageView.loadImageUsingURLString("")
         switch contentOption {
-        case .Posts:
-            cell.track = postData[indexPath.row]
-        case .Fans:
-            cell.user = fansData[indexPath.row]
-        case .Following:
-            cell.user = followingData[indexPath.row]
+        case .posts:
+            cell.track = postData[(indexPath as NSIndexPath).row]
+        case .fans:
+            cell.user = fansData[(indexPath as NSIndexPath).row]
+        case .following:
+            cell.user = followingData[(indexPath as NSIndexPath).row]
         }
         
         return cell
     }
-    override func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         return headerView
     }
     
-    override func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 150
     }
     
     
-    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 70
     }
     
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch contentOption {
-        case .Posts:
-            MusicPlayer.playSong(postData[indexPath.row])
+        case .posts:
+            MusicPlayer.playSong(postData[(indexPath as NSIndexPath).row])
             break
-        case .Fans:
-            showUserControllerForUser(fansData[indexPath.row])
+        case .fans:
+            showUserControllerForUser(fansData[(indexPath as NSIndexPath).row])
             break
-        case .Following:
-            showUserControllerForUser(followingData[indexPath.row])
+        case .following:
+            showUserControllerForUser(followingData[(indexPath as NSIndexPath).row])
             break
         }
     }
@@ -345,22 +345,22 @@ extension UserController {
 
 extension UserController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
-    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         guard let image = info[UIImagePickerControllerOriginalImage] as? UIImage else {
             return
         }
         
         uploadUserImageToFirebase(image)
-        dismissViewControllerAnimated(true, completion: nil)
+        dismiss(animated: true, completion: nil)
     }
     
-    private func uploadUserImageToFirebase(image: UIImage) {
+    fileprivate func uploadUserImageToFirebase(_ image: UIImage) {
         
-        guard let uploadImage = UIImageJPEGRepresentation(image, 0.1), uid = FIRAuth.auth()?.currentUser?.uid  else {
+        guard let uploadImage = UIImageJPEGRepresentation(image, 0.1), let uid = FIRAuth.auth()?.currentUser?.uid  else {
             return
         }
         
-        FIRStorage.storage().reference().child("users-images").child(uid).putData(uploadImage, metadata: nil) { (metadata, error) in
+        FIRStorage.storage().reference().child("users-images").child(uid).put(uploadImage, metadata: nil) { (metadata, error) in
             if error != nil {
                 print(error)
                 return
@@ -375,17 +375,17 @@ extension UserController: UIImagePickerControllerDelegate, UINavigationControlle
         }
     }
     
-    func imagePickerControllerDidCancel(picker: UIImagePickerController) {
-        dismissViewControllerAnimated(true, completion: nil)
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        dismiss(animated: true, completion: nil)
     }
     
-    func launchImagePicker(sourceType: UIImagePickerControllerSourceType) {
+    func launchImagePicker(_ sourceType: UIImagePickerControllerSourceType) {
         if UIImagePickerController.isSourceTypeAvailable(sourceType) {
             let picker = UIImagePickerController()
             picker.sourceType = sourceType
             picker.allowsEditing = false
             picker.delegate = self
-            presentViewController(picker, animated: true, completion: nil)
+            present(picker, animated: true, completion: nil)
         }
     }
 }

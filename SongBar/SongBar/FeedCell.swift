@@ -11,6 +11,7 @@ import Firebase
 
 class FeedCell: UICollectionViewCell {
     
+    var feedController: FeedController?
     var track: SpotifyTrack? {
         didSet {
             guard let track = track else {
@@ -19,21 +20,21 @@ class FeedCell: UICollectionViewCell {
             
             titleLabel.text = track.title
             subTitleLabel.text = track.artist
-            commentButton.setTitle(track.comment, forState: .Normal)
+            commentButton.setTitle(track.comment, for: UIControlState())
             fetchDonorByUid(track.donor!)
             thumbnailImageView.loadImageUsingURLString(track.imageUrl)
         }
     }
     
-    private func fetchDonorByUid(uid: String) {
-        FIRDatabase.database().reference().child("users").child(uid).observeSingleEventOfType(.Value, withBlock: { (snapshot) in
+    fileprivate func fetchDonorByUid(_ uid: String) {
+        FIRDatabase.database().reference().child("users").child(uid).observeSingleEvent(of: .value, with: { (snapshot) in
 
             guard let result = snapshot.value as? [String: AnyObject] else {
                 return
             }
             
             let user = User()
-            user.setValuesForKeysWithDictionary(result)
+            user.setValuesForKeys(result)
             
             self.usernameLabel.text = user.username
             if let imageUrl = user.imageUrl {
@@ -43,13 +44,13 @@ class FeedCell: UICollectionViewCell {
             }
             
             
-        }, withCancelBlock: nil)
+        }, withCancel: nil)
     }
 	
 	let thumbnailImageView: UIImageView	= {
 		let imageView = UIImageView()
 		imageView.translatesAutoresizingMaskIntoConstraints = false
-		imageView.contentMode = UIViewContentMode.ScaleAspectFit
+		imageView.contentMode = UIViewContentMode.scaleAspectFit
 		return imageView
 	}()
 	
@@ -57,7 +58,7 @@ class FeedCell: UICollectionViewCell {
 		let label = UILabel()
 		label.text = "Some song"
 		label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.boldSystemFontOfSize(16)
+        label.font = UIFont.boldSystemFont(ofSize: 16)
 		return label
 	}()
 	
@@ -65,7 +66,7 @@ class FeedCell: UICollectionViewCell {
 		let label = UILabel()
 		label.text = "Some artist name here"
 		label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.systemFontOfSize(14)
+        label.font = UIFont.systemFont(ofSize: 14)
 		return label
 	}()
 	
@@ -79,7 +80,7 @@ class FeedCell: UICollectionViewCell {
 	let userImageView: UIImageView = {
 		let imageView = UIImageView()
 		imageView.translatesAutoresizingMaskIntoConstraints = false
-		imageView.contentMode = UIViewContentMode.ScaleAspectFill
+		imageView.contentMode = UIViewContentMode.scaleAspectFill
         imageView.layer.cornerRadius = 22
         imageView.clipsToBounds = true
 		return imageView
@@ -101,16 +102,16 @@ class FeedCell: UICollectionViewCell {
 		let label = UILabel()
 		label.text = "Username"
 		label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.boldSystemFontOfSize(16)
+        label.font = UIFont.boldSystemFont(ofSize: 16)
 		return label
 	}()
     
     let commentButton: UIButton = {
         let button = UIButton()
-        button.setTitle("A really nice comment button", forState: .Normal)
+        button.setTitle("A really nice comment button", for: UIControlState())
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitleColor(UIColor.blackColor(), forState: .Normal)
-        button.titleLabel?.font = UIFont.systemFontOfSize(14)
+        button.setTitleColor(UIColor.black, for: UIControlState())
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 14)
         return button
     }()
 	
@@ -118,62 +119,68 @@ class FeedCell: UICollectionViewCell {
 		super.init(frame: frame)
 		setUpView()
         
-        commentButton.addTarget(self, action: #selector(self.handleComment), forControlEvents: .TouchUpInside)
+        commentButton.addTarget(self, action: #selector(self.handleComment), for: .touchUpInside)
 	}
     
     func handleComment() {
-        print(123)
+        guard let parent = feedController, let commentReference = track?.commentReference else {
+            return
+        }
+        
+        let commentController = CommentController()
+        commentController.commentReference = commentReference
+        parent.navigationController?.pushViewController(commentController, animated: true)
     }
-	
+    
 	func setUpView() {
 		addSubview(trackView)
 		addSubview(descriptionView)
 		
 		// x, y, width, height
-		trackView.topAnchor.constraintEqualToAnchor(topAnchor).active = true
-		trackView.centerXAnchor.constraintEqualToAnchor(centerXAnchor).active = true
-		trackView.widthAnchor.constraintEqualToAnchor(widthAnchor).active = true
-		trackView.heightAnchor.constraintEqualToAnchor(heightAnchor, multiplier: 2/3).active = true
+		trackView.topAnchor.constraint(equalTo: topAnchor).isActive = true
+		trackView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+		trackView.widthAnchor.constraint(equalTo: widthAnchor).isActive = true
+		trackView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 2/3).isActive = true
 		
-		descriptionView.topAnchor.constraintEqualToAnchor(trackView.bottomAnchor).active = true
-		descriptionView.widthAnchor.constraintEqualToAnchor(widthAnchor).active = true
-		descriptionView.heightAnchor.constraintEqualToAnchor(heightAnchor, multiplier: 1/3).active = true
+		descriptionView.topAnchor.constraint(equalTo: trackView.bottomAnchor).isActive = true
+		descriptionView.widthAnchor.constraint(equalTo: widthAnchor).isActive = true
+		descriptionView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 1/3).isActive = true
 		
 		trackView.addSubview(thumbnailImageView)
 		trackView.addSubview(titleLabel)
 		trackView.addSubview(subTitleLabel)
 		trackView.addSubview(separateView)
 		
-		thumbnailImageView.centerYAnchor.constraintEqualToAnchor(trackView.centerYAnchor).active = true
-		thumbnailImageView.leftAnchor.constraintEqualToAnchor(trackView.leftAnchor, constant: 8).active = true
-		thumbnailImageView.widthAnchor.constraintEqualToAnchor(trackView.widthAnchor, multiplier: 1/4).active = true
-		thumbnailImageView.heightAnchor.constraintEqualToAnchor(trackView.heightAnchor, constant: -8).active = true
+		thumbnailImageView.centerYAnchor.constraint(equalTo: trackView.centerYAnchor).isActive = true
+		thumbnailImageView.leftAnchor.constraint(equalTo: trackView.leftAnchor, constant: 8).isActive = true
+		thumbnailImageView.widthAnchor.constraint(equalTo: trackView.widthAnchor, multiplier: 1/4).isActive = true
+		thumbnailImageView.heightAnchor.constraint(equalTo: trackView.heightAnchor, constant: -8).isActive = true
 		
-		titleLabel.centerYAnchor.constraintEqualToAnchor(thumbnailImageView.centerYAnchor).active = true
-		titleLabel.leftAnchor.constraintEqualToAnchor(thumbnailImageView.rightAnchor, constant: 8).active = true
+		titleLabel.centerYAnchor.constraint(equalTo: thumbnailImageView.centerYAnchor).isActive = true
+		titleLabel.leftAnchor.constraint(equalTo: thumbnailImageView.rightAnchor, constant: 8).isActive = true
 		
-		subTitleLabel.topAnchor.constraintEqualToAnchor(titleLabel.bottomAnchor, constant: 8).active = true
-		subTitleLabel.leftAnchor.constraintEqualToAnchor(thumbnailImageView.rightAnchor, constant: 8).active = true
+		subTitleLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 8).isActive = true
+		subTitleLabel.leftAnchor.constraint(equalTo: thumbnailImageView.rightAnchor, constant: 8).isActive = true
 		
-		separateView.widthAnchor.constraintEqualToAnchor(widthAnchor).active = true
-		separateView.heightAnchor.constraintEqualToConstant(1).active = true
-		separateView.topAnchor.constraintEqualToAnchor(trackView.topAnchor).active = true
-		separateView.centerXAnchor.constraintEqualToAnchor(centerXAnchor).active = true
+		separateView.widthAnchor.constraint(equalTo: widthAnchor).isActive = true
+		separateView.heightAnchor.constraint(equalToConstant: 1).isActive = true
+		separateView.topAnchor.constraint(equalTo: trackView.topAnchor).isActive = true
+		separateView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
 		
 		descriptionView.addSubview(userImageView)
 		descriptionView.addSubview(usernameLabel)
 		descriptionView.addSubview(commentButton)
 		
-		userImageView.leftAnchor.constraintEqualToAnchor(descriptionView.leftAnchor, constant: 8).active = true
-		userImageView.centerYAnchor.constraintEqualToAnchor(descriptionView.centerYAnchor).active = true
-		userImageView.heightAnchor.constraintEqualToConstant(44).active = true
-		userImageView.widthAnchor.constraintEqualToConstant(44).active = true
+		userImageView.leftAnchor.constraint(equalTo: descriptionView.leftAnchor, constant: 8).isActive = true
+		userImageView.centerYAnchor.constraint(equalTo: descriptionView.centerYAnchor).isActive = true
+		userImageView.heightAnchor.constraint(equalToConstant: 44).isActive = true
+		userImageView.widthAnchor.constraint(equalToConstant: 44).isActive = true
 		
-		usernameLabel.topAnchor.constraintEqualToAnchor(userImageView.topAnchor, constant: 0).active = true
-		usernameLabel.leftAnchor.constraintEqualToAnchor(userImageView.rightAnchor, constant: 8).active = true
+		usernameLabel.topAnchor.constraint(equalTo: userImageView.topAnchor, constant: 0).isActive = true
+		usernameLabel.leftAnchor.constraint(equalTo: userImageView.rightAnchor, constant: 8).isActive = true
 		
-		commentButton.centerYAnchor.constraintEqualToAnchor(userImageView.centerYAnchor, constant: 8).active = true
-		commentButton.leftAnchor.constraintEqualToAnchor(userImageView.rightAnchor, constant: 8).active = true
+		commentButton.centerYAnchor.constraint(equalTo: userImageView.centerYAnchor, constant: 8).isActive = true
+		commentButton.leftAnchor.constraint(equalTo: userImageView.rightAnchor, constant: 8).isActive = true
 	}
 	
 	required init?(coder aDecoder: NSCoder) {

@@ -12,8 +12,8 @@ import Firebase
 class ShareController: UITableViewController {
     
     var selectedRows = [Int]()
-    private let cellId = "cellId"
-    var timer: NSTimer? = nil
+    fileprivate let cellId = "cellId"
+    var timer: Timer? = nil
     var track: SpotifyTrack?
     var fansData: [User] = [User]()
     var hidAudioPlayer: Bool?
@@ -29,7 +29,7 @@ class ShareController: UITableViewController {
         }
     }
     
-    override func canBecomeFirstResponder() -> Bool {
+    override var canBecomeFirstResponder : Bool {
         return true
     }
     
@@ -37,10 +37,10 @@ class ShareController: UITableViewController {
         super.viewDidLoad()
         self.navigationItem.title = "Fans"
         tableView.allowsMultipleSelection = true
-        tableView.registerClass(ContentCell.self, forCellReuseIdentifier: cellId)
+        tableView.register(ContentCell.self, forCellReuseIdentifier: cellId)
         observeFans()
         inputContainerView.inputTextField.delegate = self
-        inputContainerView.sendButton.addTarget(self, action: #selector(self.handleSend), forControlEvents: .TouchUpInside)
+        inputContainerView.sendButton.addTarget(self, action: #selector(self.handleSend), for: .touchUpInside)
     }
     
     func handleSend() {
@@ -56,10 +56,14 @@ class ShareController: UITableViewController {
             return
         }
         
-        let date = String(Int(NSDate().timeIntervalSince1970))
+        let date = String(Int(Date().timeIntervalSince1970))
         let comment = inputContainerView.inputTextField.text!
         
-        var value = ["title": track.title, "artist": track.artist, "imageUrl": track.imageUrl, "previewUrl": track.previewUrl, "comment": comment]
+        
+        
+        let ref = FIRDatabase.database().reference().child("comments").childByAutoId()
+
+        var value = ["title": track.title, "artist": track.artist, "imageUrl": track.imageUrl, "previewUrl": track.previewUrl, "comment": comment, "commentReference": ref.key]
         
         FIRDatabase.database().reference().child("songs-sent").child(uid).child(date).updateChildValues(value)
         
@@ -67,32 +71,32 @@ class ShareController: UITableViewController {
         
         FIRDatabase.database().reference().child("songs-shared").child(uid).child(date).updateChildValues(value)
         
-        
-        
         for row in selectedRows {
             if let fanUid = fansData[row].uid {
                 FIRDatabase.database().reference().child("songs-shared").child(fanUid).child(date).updateChildValues(value)
             }
         }
         
-        navigationController?.popViewControllerAnimated(true)
+        ref.childByAutoId().updateChildValues(["comment":comment, "commentator": uid, "timestamp": date])
+        
+        navigationController?.popViewController(animated: true)
 
     }
 
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        if MusicPlayer.playView?.hidden == false {
-            MusicPlayer.playView?.hidden = true
+        if MusicPlayer.playView?.isHidden == false {
+            MusicPlayer.playView?.isHidden = true
             hidAudioPlayer = true
         }
     }
     
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
-        if MusicPlayer.playView?.hidden == true && hidAudioPlayer == true {
-            MusicPlayer.playView?.hidden = false
+        if MusicPlayer.playView?.isHidden == true && hidAudioPlayer == true {
+            MusicPlayer.playView?.isHidden = false
         }
     }
     
@@ -101,9 +105,9 @@ class ShareController: UITableViewController {
             return
         }
         
-        FIRDatabase.database().reference().child("users-fans").child(uid).observeEventType(.ChildAdded, withBlock: { (snapshot) in
+        FIRDatabase.database().reference().child("users-fans").child(uid).observe(.childAdded, with: { (snapshot) in
             
-            FIRDatabase.database().reference().child("users").child(snapshot.key).observeSingleEventOfType(.Value, withBlock: { (snapshot) in
+            FIRDatabase.database().reference().child("users").child(snapshot.key).observeSingleEvent(of: .value, with: { (snapshot) in
                 
                 guard let result = snapshot.value as? [String: AnyObject] else {
                     return
@@ -111,7 +115,7 @@ class ShareController: UITableViewController {
                 
                 let user = User()
                 user.uid = snapshot.key
-                user.setValuesForKeysWithDictionary(result)
+                user.setValuesForKeys(result)
                 
                 if let imageUrl = result["imageUrl"] as? String {
                     user.imageUrl = imageUrl
@@ -120,61 +124,61 @@ class ShareController: UITableViewController {
                 self.fansData.append(user)
                 self.attemptReloadTable()
                 
-                }, withCancelBlock: nil)
-        }, withCancelBlock: nil)
+                }, withCancel: nil)
+        }, withCancel: nil)
     }
     
-    private func attemptReloadTable() {
+    fileprivate func attemptReloadTable() {
         self.timer?.invalidate()
-        self.timer = NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: #selector(self.handleReloadTable), userInfo: nil, repeats: false)
+        self.timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(self.handleReloadTable), userInfo: nil, repeats: false)
     }
     
     func handleReloadTable() {
-        dispatch_async(dispatch_get_main_queue()) {
+        DispatchQueue.main.async {
             self.tableView.reloadData()
         }
     }
 }
 
 extension ShareController {
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return fansData.count
     }
     
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier(cellId, forIndexPath: indexPath) as! ContentCell
-        cell.user = fansData[indexPath.row]
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! ContentCell
+        cell.user = fansData[(indexPath as NSIndexPath).row]
         return cell
     }
     
-    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 72
     }
     
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        let cell = tableView.cellForRowAtIndexPath(indexPath) as! ContentCell
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let cell = tableView.cellForRow(at: indexPath) as! ContentCell
         
-        cell.accessoryType = .Checkmark
-        selectedRows.append(indexPath.row)
+        cell.accessoryType = .checkmark
+        selectedRows.append((indexPath as NSIndexPath).row)
     }
     
-    override func tableView(tableView: UITableView, didDeselectRowAtIndexPath indexPath: NSIndexPath) {
-        let cell = tableView.cellForRowAtIndexPath(indexPath) as! ContentCell
-        cell.accessoryType = .None
+    override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+        let cell = tableView.cellForRow(at: indexPath) as! ContentCell
+        cell.accessoryType = .none
         
-        let index = selectedRows.indexOf(indexPath.row)
+        let index = selectedRows.index(of: (indexPath as NSIndexPath).row)
         if let i = index {
-            selectedRows.removeAtIndex(i)
+            selectedRows.remove(at: i)
         }
     }
 }
 
 extension ShareController: UITextFieldDelegate {
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
     }

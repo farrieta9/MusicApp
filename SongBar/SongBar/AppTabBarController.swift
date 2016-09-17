@@ -12,10 +12,10 @@ class AppTabBarController: UITabBarController {
 	
 	let playerView: UIView = {
 		let view = UIView()
-		view.backgroundColor = UIColor.blueColor()
+		view.backgroundColor = UIColor.blue
         view.backgroundColor = UIColor.rgb(225, green: 225, blue: 225)
 		view.translatesAutoresizingMaskIntoConstraints = false
-		view.hidden = true
+		view.isHidden = true
 		return view
 	}()
     
@@ -23,7 +23,7 @@ class AppTabBarController: UITabBarController {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         let image = UIImage(named: "pause")
-        button.setImage(image, forState: .Normal)
+        button.setImage(image, for: UIControlState())
         return button
     }()
     
@@ -31,7 +31,7 @@ class AppTabBarController: UITabBarController {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         let image = UIImage(named: "delete")
-        button.setImage(image, forState: .Normal)
+        button.setImage(image, for: UIControlState())
         return button
     }()
     
@@ -39,7 +39,7 @@ class AppTabBarController: UITabBarController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "Some track name"
-        label.font = UIFont.systemFontOfSize(12)
+        label.font = UIFont.systemFont(ofSize: 12)
         return label
     }()
     
@@ -47,7 +47,7 @@ class AppTabBarController: UITabBarController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "Artist name"
-        label.font = UIFont.systemFontOfSize(12)
+        label.font = UIFont.systemFont(ofSize: 12)
         return label
     }()
     
@@ -95,24 +95,24 @@ class AppTabBarController: UITabBarController {
 		setUpContraints()
 	}
     
-	private func setUpContraints() {
+	fileprivate func setUpContraints() {
 		// Need x, y, width, and height
-		playerView.centerXAnchor.constraintEqualToAnchor(view.centerXAnchor).active = true
-		playerView.centerYAnchor.constraintEqualToAnchor(view.bottomAnchor, constant: -70).active = true
-		playerView.widthAnchor.constraintEqualToAnchor(view.widthAnchor).active = true
-		playerView.heightAnchor.constraintEqualToConstant(50).active = true
+		playerView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+		playerView.centerYAnchor.constraint(equalTo: view.bottomAnchor, constant: -70).isActive = true
+		playerView.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
+		playerView.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
-        playPauseButton.centerYAnchor.constraintEqualToAnchor(playerView.centerYAnchor).active = true
-        playPauseButton.leftAnchor.constraintEqualToAnchor(playerView.leftAnchor, constant: 8).active = true
+        playPauseButton.centerYAnchor.constraint(equalTo: playerView.centerYAnchor).isActive = true
+        playPauseButton.leftAnchor.constraint(equalTo: playerView.leftAnchor, constant: 8).isActive = true
         
-        stopButton.centerYAnchor.constraintEqualToAnchor(playerView.centerYAnchor).active = true
-        stopButton.rightAnchor.constraintEqualToAnchor(playerView.rightAnchor, constant: -8).active = true
+        stopButton.centerYAnchor.constraint(equalTo: playerView.centerYAnchor).isActive = true
+        stopButton.rightAnchor.constraint(equalTo: playerView.rightAnchor, constant: -8).isActive = true
         
-        titleLabel.leftAnchor.constraintEqualToAnchor(playPauseButton.rightAnchor, constant: 8).active = true
-        titleLabel.centerYAnchor.constraintEqualToAnchor(playPauseButton.topAnchor, constant: 2).active = true
+        titleLabel.leftAnchor.constraint(equalTo: playPauseButton.rightAnchor, constant: 8).isActive = true
+        titleLabel.centerYAnchor.constraint(equalTo: playPauseButton.topAnchor, constant: 2).isActive = true
         
-        detailLabel.leftAnchor.constraintEqualToAnchor(playPauseButton.rightAnchor, constant: 8).active = true
-        detailLabel.topAnchor.constraintEqualToAnchor(titleLabel.bottomAnchor, constant: 4).active = true
+        detailLabel.leftAnchor.constraint(equalTo: playPauseButton.rightAnchor, constant: 8).isActive = true
+        detailLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 4).isActive = true
         
 //        spotifyIconImageView.rightAnchor.constraintEqualToAnchor(stopButton.leftAnchor, constant: -4).active = true
 //        spotifyIconImageView.bottomAnchor.constraintEqualToAnchor(playerView.bottomAnchor, constant: -4).active = true
@@ -120,40 +120,40 @@ class AppTabBarController: UITabBarController {
 //        spotifyIconImageView.heightAnchor.constraintEqualToConstant(21).active = true
 	}
     
-    private func setUpMusicPlayer() {
+    fileprivate func setUpMusicPlayer() {
         MusicPlayer.playView = playerView
         MusicPlayer.titleLabel = titleLabel
         MusicPlayer.detailLabel = detailLabel
         MusicPlayer.playButton = playPauseButton
-        stopButton.addTarget(self, action: #selector(self.onStopButton(_:)), forControlEvents: UIControlEvents.TouchUpInside)
-        playPauseButton.addTarget(self, action: #selector(self.onPlayButton(_:)), forControlEvents: UIControlEvents.TouchUpInside)
+        stopButton.addTarget(self, action: #selector(self.onStopButton(_:)), for: UIControlEvents.touchUpInside)
+        playPauseButton.addTarget(self, action: #selector(self.onPlayButton(_:)), for: UIControlEvents.touchUpInside)
     }
     
-    func onStopButton(sender: UIButton) {
+    func onStopButton(_ sender: UIButton) {
         guard let audioPlayer = MusicPlayer.audioPlay else {
             return
         }
         
-        playerView.hidden = true
+        playerView.isHidden = true
         audioPlayer.pause()
     }
     
-    func onPlayButton(sender: UIButton) {
+    func onPlayButton(_ sender: UIButton) {
         guard let audioPlayer = MusicPlayer.audioPlay else {
             return
         }
         
         switch MusicPlayer.musicStatus {
-        case .Pause:
-            MusicPlayer.musicStatus = .Play
+        case .pause:
+            MusicPlayer.musicStatus = .play
             let image = UIImage(named: "pause")
-            sender.setImage(image, forState: .Normal)
+            sender.setImage(image, for: UIControlState())
             audioPlayer.play()
             
-        case .Play:
-            MusicPlayer.musicStatus = .Pause
+        case .play:
+            MusicPlayer.musicStatus = .pause
             let image = UIImage(named: "play")
-            sender.setImage(image, forState: .Normal)
+            sender.setImage(image, for: UIControlState())
             audioPlayer.pause()
         }
         

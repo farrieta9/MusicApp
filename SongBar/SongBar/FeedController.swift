@@ -8,19 +8,39 @@
 
 import UIKit
 import Firebase
+fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l < r
+  case (nil, _?):
+    return true
+  default:
+    return false
+  }
+}
+
+fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l > r
+  default:
+    return rhs < lhs
+  }
+}
+
 
 class FeedController: UICollectionViewController {
 	
-    var timer: NSTimer? = nil
+    var timer: Timer? = nil
     var tracksData = [SpotifyTrack]()
-	private let cellId = "cellId"
+	fileprivate let cellId = "cellId"
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
         checkIfUserIsSignedIn()
 		navigationItem.title = "Feed"
-		collectionView?.backgroundColor = UIColor.whiteColor()
-		collectionView?.registerClass(FeedCell.self, forCellWithReuseIdentifier: cellId)
+		collectionView?.backgroundColor = UIColor.white
+		collectionView?.register(FeedCell.self, forCellWithReuseIdentifier: cellId)
         collectionView?.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 150, right: 0)
         collectionView?.alwaysBounceVertical = true
         observeFeed()
@@ -29,16 +49,16 @@ class FeedController: UICollectionViewController {
     func checkIfUserIsSignedIn() {
         if FIRAuth.auth()?.currentUser?.uid == nil {
             // To remove error 'Unbalanced calls to begin end appearance transitions for UINavCtrl
-            performSelector(#selector(handleLogout), withObject: nil, afterDelay: 0)
+            perform(#selector(handleLogout), with: nil, afterDelay: 0)
         } else {
             let uid = FIRAuth.auth()?.currentUser?.uid
-            FIRDatabase.database().reference().child("users").child(uid!).observeSingleEventOfType(.Value, withBlock: { (snapshot) in
+            FIRDatabase.database().reference().child("users").child(uid!).observeSingleEvent(of: .value, with: { (snapshot) in
                 
                 if let results = snapshot.value as? [String: AnyObject] {
                     self.navigationItem.title = results["username"] as? String
                 }
                 
-            }, withCancelBlock: nil)
+            }, withCancel: nil)
         }
     }
 
@@ -52,66 +72,67 @@ class FeedController: UICollectionViewController {
         
         let loginController = LoginController()
         let navController = UINavigationController(rootViewController: loginController)
-        presentViewController(navController, animated: true, completion: nil)
+        present(navController, animated: true, completion: nil)
     }
     
-    private func observeFeed() {
+    fileprivate func observeFeed() {
         guard let uid = FIRAuth.auth()?.currentUser?.uid else {
             return
         }
         
-        FIRDatabase.database().reference().child("songs-shared").child(uid).observeEventType(.ChildAdded, withBlock: { (snapshot) in
+        FIRDatabase.database().reference().child("songs-shared").child(uid).observe(.childAdded, with: { (snapshot) in
             
             guard let result = snapshot.value as? [String: AnyObject] else {
                 return
             }
             
             let track = SpotifyTrack()
-            track.setValuesForKeysWithDictionary(result)
-            track.timestamp = Int(snapshot.key)
+            track.setValuesForKeys(result)
+            track.timestamp = Int(snapshot.key) as NSNumber?
             self.tracksData.append(track)
             
             self.attemptReloadTable()
             
             
-        }, withCancelBlock: nil)
+        }, withCancel: nil)
     }
     
-    private func attemptReloadTable() {
+    fileprivate func attemptReloadTable() {
         self.timer?.invalidate()
-        self.timer = NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: #selector(self.handleReloadTable), userInfo: nil, repeats: false)
+        self.timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(self.handleReloadTable), userInfo: nil, repeats: false)
     }
     
     func handleReloadTable() {
         
-        self.tracksData.sortInPlace { (track1, track2) -> Bool in
+        self.tracksData.sort { (track1, track2) -> Bool in
             // Decending order
-            return track1.timestamp?.intValue > track2.timestamp?.intValue
+            return track1.timestamp?.int32Value > track2.timestamp?.int32Value
         }
         
-        dispatch_async(dispatch_get_main_queue()) {
+        DispatchQueue.main.async {
             self.collectionView?.reloadData()
         }
     }
     
-	override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+	override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 		return tracksData.count
 	}
 	
-	override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-		let cell = collectionView.dequeueReusableCellWithReuseIdentifier(cellId, forIndexPath: indexPath) as! FeedCell
+	override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+		let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! FeedCell
         
-        cell.track = tracksData[indexPath.item]
+        cell.feedController = self
+        cell.track = tracksData[(indexPath as NSIndexPath).item]
 		
 		return cell
 	}
 	
-	func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-		return CGSizeMake(view.frame.width, 180)
+	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: IndexPath) -> CGSize {
+		return CGSize(width: view.frame.width, height: 180)
 	}
     
-    override func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-        MusicPlayer.playSong(tracksData[indexPath.item])
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        MusicPlayer.playSong(tracksData[(indexPath as NSIndexPath).item])
     }
 }
 
