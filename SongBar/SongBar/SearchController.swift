@@ -201,7 +201,7 @@ extension SearchController: UITableViewDataSource {
 		return cell
 	}
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    private func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         searchBar.resignFirstResponder()
         switch searchContent {
         case .music:
@@ -239,7 +239,7 @@ extension SearchController: UITableViewDelegate {
         return [playAction]
     }
     
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+    @objc(tableView:commitEditingStyle:forRowAtIndexPath:) func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         // you need to implement this method too or you can't swipe to display the actions
     }
     

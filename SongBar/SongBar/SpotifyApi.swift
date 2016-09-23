@@ -17,7 +17,7 @@ class SpotifyApi {
         
         
         guard let escapedQuery = query.addingPercentEncoding(
-            withAllowedCharacters: .urlHostAllowed()),
+            withAllowedCharacters: .urlHostAllowed),
             let url = URL(string: spotifyBaseAPI + escapedQuery)
             else {
                 return
@@ -27,7 +27,7 @@ class SpotifyApi {
             (data, response, error) in
             
             if error != nil {
-                print("Error: \(error!.code.description)")
+                print("Error: \(error!._code.description)")
                 return
             }
             
@@ -40,7 +40,7 @@ class SpotifyApi {
             
             let tracks = parseTracksFrom(json)
             
-            completion(tracks: tracks)
+            completion(tracks)
         }) 
         task.resume()
     }

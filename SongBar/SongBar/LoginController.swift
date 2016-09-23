@@ -70,7 +70,6 @@ class LoginController: UIViewController {
             if error != nil {
                 print(error)
                 self.displayAlert("Error with email or password")
-                print(error?.userInfo)
                 return
             } else {
                 self.showAppTabBarController()

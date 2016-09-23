@@ -15,7 +15,11 @@ extension UIColor {
 }
 
 
-let imageCache = NSCache()  // Rename to cachedImages
+//let imageCache = NSCache()  // Rename to cachedImages
+//let imageCache = NSCache<String, UIImage>()
+
+var imageCache = [String: AnyObject]()
+
 extension UIImageView {
     func loadImageUsingURLString(_ urlString: String) {
         let url = URL(string: urlString)
@@ -23,7 +27,14 @@ extension UIImageView {
         image = nil
         image = UIImage(named: "default_profile.png")
         
+        /*
         if let imageFromCache = imageCache.object(forKey: urlString) as? UIImage {
+            self.image = imageFromCache
+            return
+        }
+ */
+        
+        if let imageFromCache = imageCache[urlString] as? UIImage {
             self.image = imageFromCache
             return
         }
@@ -41,7 +52,8 @@ extension UIImageView {
                 
                 let imageToCache = UIImage(data: data!)
                 
-                imageCache.setObject(imageToCache!, forKey: urlString)
+                //imageCache.setObject(imageToCache!, forKey: urlString)
+                imageCache[urlString] = imageToCache
                 
                 self.image = imageToCache
             })
